@@ -32,8 +32,16 @@ const registerValidationSchema = Joi.object({
       'string.min': 'Password must be at least 8 characters',
       'string.pattern.base': 'Password must contain at least one special character',
     }),
-
+  firstName : Joi.string().required()
+  .messages({
+    'string.empty' : "Please enter your first name"
+  }),
+  lastname : Joi.string().required()
+  .messages({
+    'string.empty' : "Please enter your first name"
+  }),
   uploadImage: Joi.string().allow(''),
+
 });
 
 const loginValidationSchema = Joi.object({
@@ -50,7 +58,25 @@ const loginValidationSchema = Joi.object({
   })
 
 })
+const userVerificationSchema = Joi.object({
+  userId : Joi.string().trim().required().messages({ 'string.empty' : 'Login to update your profile'}),
+  password : Joi.string().trim().required().messages({ 'string.empty' : 'Please enter your password'})
+})
+const updateProfileSchema = Joi.object({
+  userId : Joi.string().trim(),
+  username : Joi.string().allow(""),
+  email : Joi.string().email().allow("").messages({ 'string.email' : 'Please enter a valid email address'}),
+  firstname : Joi.string().allow(""),
+  lastname : Joi.string().allow(""),
+  bio : Joi.string().allow(""),
+  location : Joi.string().allow(""),
+  education : Joi.string().allow(""),
+  work : Joi.string().allow(""),
+
+})
 module.exports = {
   registerValidationSchema,
-  loginValidationSchema
+  loginValidationSchema,
+  userVerificationSchema,
+  updateProfileSchema
 };

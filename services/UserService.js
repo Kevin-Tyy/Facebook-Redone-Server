@@ -25,10 +25,24 @@ class UserService {
         return user;
       }
     } catch (error) {
-      throw new Error(`Something went wrong: ${error.message}`); // Include the specific error message in the thrown error
+      throw new Error(`Something went wrong: ${error.message}`); 
     }
   }
-  
+  async verfiyUser (UserId ,password) {
+    try{
+      const user = await UserModel.findOne({ _id : UserId});
+      if(user){
+        const isPasswordVerified = await bcrypt.compare(password, user.password);
+        if(isPasswordVerified){
+          return user;
+        }
+
+      }
+      
+    }catch (error) {
+      throw new Error(`Something went wrong: ${error.message}`);
+    }
+  }
   async getUsers() {
     try {
       return await UserModel.find();
@@ -45,13 +59,26 @@ class UserService {
     }
   }
 
-  async updateUser(UserId, UserData) {
+  async updateUser(UserData) {
+    const {userId ,username, email, firstname, lastname , bio, location, education, work , profileImage } = UserData
     try {
-      return await UserModel.findByIdAndUpdate(
-        UserId,
-        { $set: UserData },
-        { new: true }
-      );
+      const updatedUser =  await UserModel.findByIdAndUpdate(
+        {_id : userId},
+        { 
+          username : username,
+          profileImage : profileImage,
+          email : email,
+          firstname : firstname,
+          lastname : lastname,
+          bio : bio,
+          location : location,
+          education : education,
+          work : work
+        });
+      if(updatedUser) {
+        return updatedUser;
+      }; 
+      
     } catch (error) {
       throw new Error('Failed to update User');
     }

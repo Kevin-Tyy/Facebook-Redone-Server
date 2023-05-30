@@ -1,4 +1,4 @@
-const { registerValidationSchema , loginValidationSchema} = require("../validation/UserValidation");
+const { registerValidationSchema , loginValidationSchema , userVerificationSchema, updateProfileSchema} = require("../validation/UserValidation");
 const UserService = require("../services/UserService");
 const UserModel = require("../models/UserModel");
 const jwtsecret = process.env.JWTSECRET;
@@ -8,8 +8,8 @@ class UserController {
 	registerUser = async (req, res) => {
 		const { error } = registerValidationSchema.validate(req.body);
 		if (error) {
-			const errorMsg = error.details[0].message;
-			res.send({ msg: errorMsg });
+			const errorMsg = error.details[0].message
+			res.send({ msg: errorMsg , success : false });
 		} else {
 			try {
 
@@ -22,11 +22,13 @@ class UserController {
 				if (userByEmail) return res.send({ msg: `Email already in use` });
 
 				const createdUser = await UserService.createUser(req.body);
-				{createdUser &&
+				{createdUser ?
 					jwt.sign({ username : username , userId : createdUser.userId}, jwtsecret , (err , token )=> {
 						if(err)	throw err;
-						res.send(createdUser ? {msg : "User created successfully" , token : token , success : true} : { msg : "Couldn't create user" , success : false});
+						res.send({msg : "User created successfully" , token : token , success : true});
 					})	
+					:
+					{ msg : "Couldn't create user" , success : false}
 				}
 
 			} catch (error) {
@@ -38,9 +40,8 @@ class UserController {
 	};
 	loginUser = async (req, res) => {
 		const {error } = loginValidationSchema.validate(req.body)
-		if(error){
-			console.log(error.details)
-			res.send(error.details[0].message)
+		if(error){	
+			res.send({ msg : error.details[0].message , success : false })
 		}
 		else{
 			try{
@@ -48,7 +49,15 @@ class UserController {
 				const userByUsername = await UserModel.findOne({ username : username})
 				if(userByUsername){
 					const loggedInUser = await UserService.loginUser(req.body)
-					{loggedInUser ? res.send("user logged in") : res.send("Incorrect password")}				
+					{loggedInUser ? (
+						jwt.sign({ username : loggedInUser.username , userId : loggedInUser._id} , jwtsecret, (err, token)=> {
+							if(err) throw err;
+							res.send({ msg : "user logged in" , token : token ,  success : true }); 
+
+						})
+					)
+					: res.send({msg : "Incorrect password"})}		
+							
 				}
 				else{
 					return res.send({ msg : 'User not found'})
@@ -60,7 +69,47 @@ class UserController {
 			}
 		}
 	};
-	updateUser = (req, res) => {};
+	verifyUser = async  (req, res) => {
+		const {error} = userVerificationSchema.validate(req.body)
+		if (error) {	
+			res.send({msg : error.details[0].message , success : false});
+			
+		}
+		else{
+
+			try {
+				const { userId , password } = req.body;
+				const User = await UserService.verfiyUser(userId, password);
+				if(!User) res.send({ msg : 'Incorrect Password' , success : false });
+				if(User) res.send({ msg : 'User verified', success: true });
+				
+			} catch (error) {
+				res.send({ msg : 'Something went wrong', success: false });
+				console.log(error);	
+			}
+		}
+
+	}
+	updateUser = async  (req, res) => {
+		console.log(req.body);
+		const { error } = updateProfileSchema.validate(req.body);
+		if(error) {
+			res.send({msg : error.details[0].message , success : false});
+		}
+		else{
+			try {
+				const updatedProfile = await UserService.updateUser(req.body);
+				{updatedProfile &&
+					res.send({ msg : "profile updated successfully" , success : true });
+				}
+			} catch (error) {
+				res.send({ msg : "Couldn't update profile" , success : false });
+				console.error(error);
+			}	
+
+		}
+
+	};
 	deleteUser = (req, res) => {};
 	logoutUser = (req, res) => {};
 	viewProfile = (req, res) => {};
