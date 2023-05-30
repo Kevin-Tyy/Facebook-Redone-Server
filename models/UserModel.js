@@ -11,6 +11,12 @@ const UserSchema = new mongoose.Schema({
         trim: true,
         required: true,
     },
+    userId : {
+        type: String,
+        trim : true,
+        required: true,
+        unique: true,
+    },
     username : {
         type : String,
         trim : true,
@@ -28,7 +34,7 @@ const UserSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    profileImage : {
+    profileimage : {
         type: String,
         trim: true,
     },
@@ -49,6 +55,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
+    friendList : {
+        type : [String],
+        trim: true,
+    }
+    
     
 } , {timestamps : true})
 

@@ -1,18 +1,21 @@
 const UserModel = require('../models/UserModel');
 const bcrypt = require('bcryptjs');
+const { Error } = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 
 class UserService {
   
   async createUser(userData) {
-    const { username, email, password } = userData;
+    const { username, email, password , firstname , lastname , profileimage } = userData;
+    const userId = uuidv4();
     const passwordhash = await bcrypt.hash(password , 10);
     try {
-      const newUser = new UserModel({username: username , email:email , password: passwordhash});
+      const newUser = new UserModel({userId : userId, username: username , email:email , password: passwordhash , firstname : firstname , lastname : lastname , profileimage : profileimage});
       await newUser.save();
       return newUser;
 
     } catch (error) {
-      throw new Error(`Failed to create user`);
+      throw new Error(`Failed to create user ${error.message}`);
     }
   }
   async loginUser(userData) {
@@ -28,9 +31,10 @@ class UserService {
       throw new Error(`Something went wrong: ${error.message}`); 
     }
   }
-  async verfiyUser (UserId ,password) {
+
+  async verfiyUser (userId ,password) {
     try{
-      const user = await UserModel.findOne({ _id : UserId});
+      const user = await UserModel.findOne({ userId : userId});
       if(user){
         const isPasswordVerified = await bcrypt.compare(password, user.password);
         if(isPasswordVerified){
@@ -43,30 +47,36 @@ class UserService {
       throw new Error(`Something went wrong: ${error.message}`);
     }
   }
-  async getUsers() {
+  async getUserFriends(userId) {
     try {
-      return await UserModel.find();
+      const user = await UserModel.findOne({ userId : userId});
+      const {friendList} = user;
+      return friendList;
+
     } catch (error) {
       throw new Error('Failed to retrieve Users');
     }
+
   }
 
-  async getUserById(UserId) {
+  async getUserById(userId) {
     try {
-      return await UserModel.findById(UserId);
+      const user = await UserModel.findOne({ userId: userId});
+      console.log(user);
+      return  user
     } catch (error) {
       throw new Error('Failed to retrieve User');
     }
   }
 
   async updateUser(UserData) {
-    const {userId ,username, email, firstname, lastname , bio, location, education, work , profileImage } = UserData
+    const {userId ,username, email, firstname, lastname , bio, location, education, work , profileimage } = UserData
     try {
       const updatedUser =  await UserModel.findByIdAndUpdate(
-        {_id : userId},
+        {userId : userId},
         { 
           username : username,
-          profileImage : profileImage,
+          profileimage : profileimage,
           email : email,
           firstname : firstname,
           lastname : lastname,
@@ -80,16 +90,14 @@ class UserService {
       }; 
       
     } catch (error) {
-      throw new Error('Failed to update User');
+      throw new Error('Failed to update User' , error);
     }
   }
 
-  async deleteUser(UserId) {
+  async deleteUser(userId) {
     try {
-      const User = await UserModel.findByIdAndDelete(UserId);
-      if (!User) {
-        throw new Error('User not found');
-      }
+    
+      const User = await UserModel.findOneAndDelete({ userId : userId });
       return User;
     } catch (error) {
       throw new Error('Failed to delete User');

@@ -5,6 +5,7 @@ const jwtsecret = process.env.JWTSECRET;
 const jwt = require('jsonwebtoken')
 
 class UserController {
+	//post
 	registerUser = async (req, res) => {
 		const { error } = registerValidationSchema.validate(req.body);
 		if (error) {
@@ -38,6 +39,7 @@ class UserController {
 			}
 		}
 	};
+	//post
 	loginUser = async (req, res) => {
 		const {error } = loginValidationSchema.validate(req.body)
 		if(error){	
@@ -50,7 +52,7 @@ class UserController {
 				if(userByUsername){
 					const loggedInUser = await UserService.loginUser(req.body)
 					{loggedInUser ? (
-						jwt.sign({ username : loggedInUser.username , userId : loggedInUser._id} , jwtsecret, (err, token)=> {
+						jwt.sign({ username : loggedInUser.username , userId : loggedInUser.userId , userDataId : loggedInUser._id} , jwtsecret, (err, token)=> {
 							if(err) throw err;
 							res.send({ msg : "user logged in" , token : token ,  success : true }); 
 
@@ -69,6 +71,7 @@ class UserController {
 			}
 		}
 	};
+	//post
 	verifyUser = async  (req, res) => {
 		const {error} = userVerificationSchema.validate(req.body)
 		if (error) {	
@@ -90,29 +93,77 @@ class UserController {
 		}
 
 	}
+	//put
 	updateUser = async  (req, res) => {
-		console.log(req.body);
 		const { error } = updateProfileSchema.validate(req.body);
 		if(error) {
 			res.send({msg : error.details[0].message , success : false});
 		}
 		else{
 			try {
+			
 				const updatedProfile = await UserService.updateUser(req.body);
-				{updatedProfile &&
-					res.send({ msg : "profile updated successfully" , success : true });
+				{updatedProfile ?
+					res.send({ msg : "profile updated successfully" , success : true }) :
+					res.send({ msg : "Couldn't update profile", success : false });
 				}
 			} catch (error) {
-				res.send({ msg : "Couldn't update profile" , success : false });
+				res.send({ msg : "Something went wrong" , success : false });
 				console.error(error);
 			}	
 
 		}
 
 	};
-	deleteUser = (req, res) => {};
-	logoutUser = (req, res) => {};
-	viewProfile = (req, res) => {};
-	fetchFriends = (req, res) => {};
+	//delete
+	deleteUser = async  (req, res) => {
+		try {
+			const { userId } = req.params
+			
+			const deletedUser = await UserService.deleteUser(userId)
+			{deletedUser ? 
+				res.send({msg : 'Account deleted successfully', success : true}) : 
+				res.send({msg : 'Could not delete account', success : false})
+			}
+				
+		} catch (error) {
+			res.send({msg : 'Something went wrong' , success : false})	
+		}
+	};
+
+
+	//get
+	viewProfile = async (req, res) => {
+		
+		try {
+			let {userId} = req.params;
+			userId = userId.trim()
+			const userData = await UserService.getUserById(userId);
+			{userData ?
+				 res.send({ msg : 'User info ' , userData:  userData}):
+				 res.send({ msg : 'Cannot view Profile'})
+			}
+			
+		} catch (error) {
+			res.send({ msg : 'Something went wrong' , success : false })	
+		}
+	};
+	//get
+	fetchFriends = async (req, res) => {
+		try {
+			const {userId} = req.params;
+			
+			const friendList = await UserService.getUserFriends(userId);
+			{friendList ? res.send({ data : friendList }) : res.send({msg : 'Could not find friends'})}
+		} catch (error) {
+			res.send({ msg : 'Something went wrong' , success : false})		
+		}
+	};
+	//get
+	fetchPendingRequests = async (req, res) => {};
+	//post
+	acceptRequest = async (req, res) =>{};
+	//post
+	logoutUser = async (req, res) => {};
 }
 module.exports = new UserController();

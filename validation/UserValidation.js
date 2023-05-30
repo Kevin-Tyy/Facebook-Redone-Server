@@ -32,15 +32,15 @@ const registerValidationSchema = Joi.object({
       'string.min': 'Password must be at least 8 characters',
       'string.pattern.base': 'Password must contain at least one special character',
     }),
-  firstName : Joi.string().required()
+  firstname : Joi.string().required()
   .messages({
     'string.empty' : "Please enter your first name"
   }),
   lastname : Joi.string().required()
   .messages({
-    'string.empty' : "Please enter your first name"
+    'string.empty' : "Please enter your last name"
   }),
-  uploadImage: Joi.string().allow(''),
+  profileimage: Joi.string().allow(''),
 
 });
 
@@ -72,6 +72,7 @@ const updateProfileSchema = Joi.object({
   location : Joi.string().allow(""),
   education : Joi.string().allow(""),
   work : Joi.string().allow(""),
+  profileimage : Joi.string().allow(""),
 
 })
 module.exports = {
