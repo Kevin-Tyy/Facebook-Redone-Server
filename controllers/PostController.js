@@ -32,7 +32,7 @@ class PostController {
             
         }
     }
-    fetchAllPosts = async () => {
+    fetchAllPosts = async (req , res) => {
         try {
             const posts = await PostService.getAllPosts()
             if(posts){
@@ -42,7 +42,8 @@ class PostController {
                 res.send({ msg : "No posts retrieved" , data : posts })
             }
         } catch (error) {
-           
+            console.log(error)
+           res.send({ msg : "Something went wrong"})
         }
     }
     deletePost = async (req, res) => {
