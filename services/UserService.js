@@ -84,7 +84,8 @@ class UserService {
           location : location,
           education : education,
           work : work
-        });
+        },
+        {new : true});
       if(updatedUser) {
         return updatedUser;
       }; 

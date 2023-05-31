@@ -1,0 +1,119 @@
+const PostModel = require('../models/PostModel');
+const UserModel = require('../models/UserModel')
+const { v4 : uuidv4} = require('uuid')
+class PostService {
+    createPost = async (userId , postData) =>{
+        try{
+            const { postMedia , postText } = postData;   
+            let tags = postText.match(/@(\w+)/g);
+            const postId  = uuidv4();
+            if(tags){
+                const taggedUsernames = tags.map(user => user.slice(1))
+                const taggedUsers = await UserModel.find({ username: { $in: taggedUsernames } });
+                const taggedpeople = taggedUsers.map(user => user.userId)
+                const createdPost = new PostModel({
+                    creatorId : userId,
+                    postId : postId,
+                    postMedia : postMedia,
+                    postText : postText,
+                    taggedpeople : taggedpeople,
+                });
+               await createdPost.save();
+               return createdPost;
+
+            }
+            else{
+                const createdPost = new PostModel({
+                    creatorId : userId,
+                    postMedia : postMedia,
+                    postText : postText,
+                    postId : postId,
+                });
+                await createdPost.save();
+                return createdPost;
+            }
+
+        }catch(error){
+            console.log(error)
+            throw new Error('Failed to create post');
+            
+        }
+        
+    }   
+    deletePost = async (userId , postId) => {
+        try {
+            const postData = await PostModel.findOne({ postId : postId })
+            if(postData){
+                const { creatorId } = postData;
+      
+                if(creatorId == userId){
+                    const deletedPost = await PostModel.findOneAndDelete({ postId : postId })
+                    return deletedPost;
+                }
+            }
+        
+        } catch (error) {
+            console.log(error)
+            throw new Error('Failed to delete post')
+        }
+    }
+    getPostsByUserId = async (userId) => {
+        try {
+            const posts = await PostModel.find({ creatorId: userId})
+            if(posts){
+                return posts;
+            }
+        } catch (error) {
+            throw new Error('Failed to retrieve posts');
+        }
+    }
+    getAllPosts = async () => {
+        try {
+            const posts = await PostModel.find();
+            if(posts){
+                return posts;
+            }
+        } catch (error) {
+            throw new Error('Failed to retrieve posts');
+        }
+    }
+    addLike = async (postId , userId) => {
+        try {
+            const likedPost = await PostModel.findOne({ postId: postId });
+            if(likedPost){
+                const likedPeople = await PostModel.findOneAndUpdate(
+                    { postId : postId },
+                    {$addToSet : { likedPeople : userId}},
+                    {new : true}
+                        
+                )
+                return likedPeople;
+            }     
+        } catch (error) {
+            throw new Error("Cannot add like")
+
+        }
+    }
+    fetchLikes = async () => {
+
+
+    }
+    removeLike = async (postId , userId) => {
+        try{
+            const likedPost = await PostModel.findOne({ postId: postId });
+            if(likedPost){
+                const likedPeople = await PostModel.findOneAndUpdate(
+                    { postId : postId },
+                    {$pull : { likedPeople : userId}},
+                    {new : true}
+                        
+                )
+                return likedPeople;
+            }   
+        }catch (error) {
+            throw new Error("Cannot remove like")
+        }
+    }
+    
+}
+module.exports = new PostService;
