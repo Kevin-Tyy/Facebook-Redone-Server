@@ -38,7 +38,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-
     education : {
         type: String,
         trim: true,

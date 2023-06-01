@@ -11,13 +11,17 @@ PostRouter.route('/:userId')
 
 PostRouter.route('/:postId')
     .delete(PostController.deletePost)
-PostRouter.route('/like')
-    .post(PostController.addLike)
-PostRouter.route('/unlike')
-    .post(PostController.removeLike)
+
 PostRouter.route('/react/like')
     .post(PostController.addLike)
     .delete(PostController.removeLike)
+
+PostRouter.route('/react/comment')
+    .post(PostController.addComment)
+    
+    PostRouter.route('/react/comment/:id')
+    .delete(PostController.deleteComment)
+    .get(PostController.getComments)
 
 module.exports = PostRouter;
 

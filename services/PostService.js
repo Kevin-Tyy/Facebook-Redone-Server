@@ -34,7 +34,6 @@ class PostService {
             }
 
         }catch(error){
-            console.log(error)
             throw new Error('Failed to create post');
             
         }
@@ -53,7 +52,6 @@ class PostService {
             }
         
         } catch (error) {
-            console.log(error)
             throw new Error('Failed to delete post')
         }
     }
@@ -111,9 +109,57 @@ class PostService {
                 return likedPeople;
             }   
         }catch (error) {
-            throw new Error("Cannot remove like")
+            throw new Error("Re")
         }
     }
-    
+    addComment = async (commentData) => {
+        try {
+          const { postId, userId, content } = commentData;
+          const post = await PostModel.findOne({ postId : postId});
+        if(post){
+            const commentId = uuidv4();
+            
+            post.comments.push({
+              creatorId: userId,
+              content: content,
+              commentId : commentId
+            });
+            const updatedPost = await post.save();
+            return updatedPost;
+
+        }
+        } catch (error) {
+          throw new Error('Failed to add comment');
+        }
+      };
+    deleteComment = async (postId , commentData) => {
+        try {
+            const { commentId } = commentData;
+            const post = await PostModel.findOne({ postId : postId})
+            if(post){
+                const commentIndex = post.comments.findIndex(comment => comment.commentId === commentId);
+                
+                if(commentIndex !== -1) {
+                    post.comments.splice(commentIndex, 1)
+                    const updatedPost = await post.save();
+                    return updatedPost;
+                }
+            }
+        } catch (error) {
+            throw new Error('Request failed')
+        }
+    }
+    getComments = async (postId) => {
+        try {
+            const post =await PostModel.findOne({ postId: postId });
+            if(post){
+                if(post.comments){
+                    return comments;
+                }
+            }
+        } catch (error) {
+            throw new Error('Request failed: ')
+        }
+    }
 }
 module.exports = new PostService;
