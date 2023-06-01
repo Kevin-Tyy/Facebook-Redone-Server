@@ -72,7 +72,7 @@ class UserService {
   async updateUser(UserData) {
     const {userId ,username, email, firstname, lastname , bio, location, education, work , profileimage } = UserData
     try {
-      const updatedUser =  await UserModel.findByIdAndUpdate(
+      const updatedUser =  await UserModel.findOneAndUpdate(
         {userId : userId},
         { 
           username : username,
@@ -91,6 +91,7 @@ class UserService {
       }; 
       
     } catch (error) {
+      console.log(error.message);
       throw new Error('Failed to update User' , error);
     }
   }

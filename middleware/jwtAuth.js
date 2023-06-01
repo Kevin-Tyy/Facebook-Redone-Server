@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWTSECRET;
 
+
 const jwtAuth = (req, res, next) => {
 	const header = req.headers["authorization"];
 
@@ -11,7 +12,7 @@ const jwtAuth = (req, res, next) => {
 
 	const token = header.split(" ")[1];
 	if (!token) {
-		res.status(403).send({ msg: "User not logged in, token not provided" });
+		res.status(403).send({ msg: "Login to continue" });
 		return;
 	}
 
