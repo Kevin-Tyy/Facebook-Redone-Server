@@ -14,14 +14,14 @@ class UserController {
 		} else {
 			try {
 
-				const { email, username, password } = req.body;
+				const { email, username, phoneNumber } = req.body;
 				const userByUsername = await UserModel.findOne({ username });
 				const userByEmail = await UserModel.findOne({ email });
+				const userByPhoneNumber = await UserModel.findOne({ phoneNumber });
 
-				if (userByUsername)
-					return res.send({ msg: `Username ${username} isn't available` });
-				if (userByEmail) return res.send({ msg: `Email already in use` });
-
+				if (userByUsername)	return res.send({ msg: `Username ${username} isn't available` , success : false });
+				if (userByEmail) return res.send({ msg: `Email ${email} already in use` , success : false });
+				if (userByPhoneNumber) return res.send({ msg: `Phone number ${phoneNumber} is already in use`  , success : false });
 				const createdUser = await UserService.createUser(req.body);
 				{createdUser ?
 					jwt.sign({ username : username , userId : createdUser.userId}, jwtsecret , (err , token )=> {
@@ -29,7 +29,7 @@ class UserController {
 						res.send({msg : "User created successfully" , token : token , success : true});
 					})	
 					:
-					{ msg : "Couldn't create user" , success : false}
+					res.send({ msg : "Couldn't create user" , success : false})
 				}
 
 			} catch (error) {
@@ -62,7 +62,7 @@ class UserController {
 							
 				}
 				else{
-					return res.send({ msg : 'User not found'})
+					return res.send({ msg : 'User not found \n Please create an account'})
 				}
 
 			}catch(error){

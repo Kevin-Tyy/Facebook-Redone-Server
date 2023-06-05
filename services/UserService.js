@@ -6,11 +6,11 @@ const { v4: uuidv4 } = require('uuid');
 class UserService {
   
   async createUser(userData) {
-    const { username, email, password , firstname , lastname , profileimage } = userData;
+    const { username, email, password , firstName , lastName , profileimage  , phoneNumber} = userData;
     const userId = uuidv4();
     const passwordhash = await bcrypt.hash(password , 10);
     try {
-      const newUser = new UserModel({userId : userId, username: username , email:email , password: passwordhash , firstname : firstname , lastname : lastname , profileimage : profileimage});
+      const newUser = new UserModel({userId : userId, username: username , email:email , password: passwordhash , firstname : firstName , lastname : lastName , phoneNumber : phoneNumber , profileimage : profileimage});
       await newUser.save();
       return newUser;
 

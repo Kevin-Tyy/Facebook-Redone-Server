@@ -4,7 +4,8 @@ const CommentSchema = new mongoose.Schema(
 	{
 		creatorId: {
 			type: String,
-			required : true
+			required : true,	
+			ref: 'users'
 		},
 		content: {
 			type: String,
@@ -22,6 +23,7 @@ const PostSchema = new mongoose.Schema(
 		creatorId: {
 			type: String,
 			required: true,
+			ref : 'users'
 		},
 		postId: {
 			type: String,
@@ -41,6 +43,7 @@ const PostSchema = new mongoose.Schema(
 		
 		taggedpeople: {
 			type: [String],
+
 		},
 		likedPeople: {
 			type: [String],
