@@ -14,6 +14,7 @@ class StoryService {
                 storyId: storyId,
             });
             await createdStory.save();
+            console.log(createdStory);
             return createdStory;
         } catch (error) {
          console.error(error);
@@ -22,7 +23,7 @@ class StoryService {
     }
     getStories = async () => {
         try{
-            const stories = await StoryModel.find().sort({ createdAt : -1})
+            const stories = await StoryModel.find()
             return stories;
         }catch(error){
             console.log(error)

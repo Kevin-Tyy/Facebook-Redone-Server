@@ -6,6 +6,6 @@ const router = Router();
 
 router.use('/user' , UserRoute);
 router.use('/post' , PostRoute);
-router.use('/story' , StoryRouter);
+router.use('/stories' , StoryRouter);
 
 module.exports = router

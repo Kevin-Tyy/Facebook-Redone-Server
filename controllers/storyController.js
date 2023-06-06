@@ -21,8 +21,12 @@ class StoryController {
     getStories = async (req, res) => {
         try{
             const stories = await StoryService.getStories()
+            {stories ? 
+                res.send({ msg : 'Stories retrieved' , success : true , stories : stories }):
+                res.send({ msg : 'Stories not retrieved' , success : false , stories : stories })
+            }
         }catch(error){
-
+            res.send({ msg : 'Something went wrong, Check your internet connection and try again' , success : false , stories : stories })
         }
     }
 }
