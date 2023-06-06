@@ -1,5 +1,8 @@
-export const cloudUpload = async (mediaStr) => {
-    imagepUloadResponse = await cloudinary.v2.uploader.upload(previewSource, {
-        folder: "user_posts",
-    });
-}
+//posts
+const { cloudinary } = require("../utils/cloudinary");
+const cloudUpload = async (postMedia) => {
+	return await cloudinary.v2.uploader.upload(postMedia, {
+		folder: "FB",
+	});
+};
+module.exports = cloudUpload;

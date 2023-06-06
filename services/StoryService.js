@@ -1,14 +1,16 @@
 const StoryModel = require('../models/StoryModel')
 const { v4 : uuidv4} = require('uuid')
+const cloudUpload = require('../middleware/cloudUpload')
 class StoryService {
     createStory = async (storyData) => {
         
         try {
             const storyId = uuidv4();
             const {userId , storyMedia } = storyData;
+            const imagepUloadResponse = await cloudUpload(storyMedia)
             const createdStory = new StoryModel({
                 creatorId : userId,
-                storyMedia : storyMedia,
+                storyMedia : imagepUloadResponse?.secure_url,
                 storyId: storyId,
             });
             await createdStory.save();
@@ -20,7 +22,7 @@ class StoryService {
     }
     getStories = async () => {
         try{
-            const stories = await StoryModel.find()
+            const stories = await StoryModel.find().sort({ createdAt : -1})
             return stories;
         }catch(error){
             console.log(error)

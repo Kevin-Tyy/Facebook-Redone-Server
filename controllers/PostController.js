@@ -13,7 +13,7 @@ class PostController {
                 const createdPost = await PostService.createPost(userId , req.body);
                 res.send({ msg : 'Post created successfully' , post : createdPost , success : true });
             }catch(error){
-                res.send({ msg : "Something went wrong" , success : false})
+                res.send({ msg : "Something went wrong, Check your internet connection or try again later" , success : false})
             }
 
         }

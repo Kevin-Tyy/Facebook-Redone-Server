@@ -11,6 +11,7 @@ const commentValidation = Joi.object({
     content : Joi.string().required().messages({ 'string.empty': 'Comment cannot be empty'})
 })
 const storyValidation = Joi.object({
+    storyCaption : Joi.allow(""),
     storyMedia : Joi.string().required().messages({ 'string.empty': 'Story media cannot be empty'}),
     userId : Joi.string().required().messages({ 'string.empty': 'User id cannot be empty'})
 })

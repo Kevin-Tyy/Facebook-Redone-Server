@@ -11,10 +11,14 @@ const StorySchema = new mongoose.Schema({
     storyMedia : {
         type : String,
         required : true
+    },
+    stortCaption : {
+        type : String,
+        trim : true
     }
 } , {timestamps : true})
 
-StorySchema.index({ createdAt: 1 }, { expireAfterSeconds: 1 });
+StorySchema.index({ createdAt: 1 }, { expireAfterSeconds: 100 });
 
 const StoryModel = mongoose.model("Story" , StorySchema);
 module.exports = StoryModel;

@@ -1,18 +1,14 @@
 const PostModel = require("../models/PostModel");
 const UserModel = require("../models/UserModel");
 const { v4: uuidv4 } = require("uuid");
-// const { cloudinary } = require("../utils/cloudinary");
-// const { cloudUpload } = require("../middleware/cloudUpload");
+const cloudUpload = require("../middleware/cloudUpload");
 class PostService {
 	createPost = async (userId, postData) => {
 		try {
 			const { postMedia, postText } = postData;
 			let tags = postText.match(/@(\w+)/g);
 			const postId = uuidv4();
-			// const imagepUloadResponse = await cloudinary.v2.uploader.upload(postMedia, {
-			// 		folder: "user_posts",
-			// 	});
-            // const imagepUloadResponse = cloudUpload(postMedia)
+			const imagepUloadResponse = await cloudUpload(postMedia)
 			if (tags) {
 				const taggedUsernames = tags.map((user) => user.slice(1));
 				const taggedUsers = await UserModel.find({
@@ -22,7 +18,7 @@ class PostService {
 				const createdPost = new PostModel({
 					creatorId: userId,
 					postId: postId,
-					postMedia: postMedia,
+					postMedia: imagepUloadResponse?.secureUrl,
 					postText: postText,
 					taggedpeople: taggedpeople,
 				});
@@ -31,7 +27,7 @@ class PostService {
 			} else {
 				const createdPost = new PostModel({
 					creatorId: userId,
-					postMedia: postMedia,
+					postMedia: imagepUloadResponse?.secure_url ,
 					postText: postText,
 					postId: postId,
 				});
@@ -39,6 +35,7 @@ class PostService {
 				return createdPost;
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error("Failed to create post");
 		}
 	};
@@ -71,7 +68,7 @@ class PostService {
 	};
 	getAllPosts = async () => {
 		try {
-			const posts = await PostModel.find();
+			const posts = await PostModel.find().sort({ createdAt : -1 });
 			if (posts) {
 				return posts;
 			}
