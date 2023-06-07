@@ -9,10 +9,11 @@ class StoryController {
             try{
                 const createdStory = await StoryService.createStory(req.body);
                 {createdStory ? 
-                    res.send({ msg : 'Post created successfully' , post : createdStory , success : true}): 
+                    res.send({ msg : 'Story added successfully' , post : createdStory , success : true}): 
                     res.send({ msg : 'Story not added' , success : false});
                 }
             }catch(error){
+                console.log(error)
                 res.send({ msg : "Something went wrong, Check your internet connection and try again" , success : false})
             }
 

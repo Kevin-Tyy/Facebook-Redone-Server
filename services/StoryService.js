@@ -17,7 +17,7 @@ class StoryService {
             console.log(createdStory);
             return createdStory;
         } catch (error) {
-         console.error(error);
+         console.log(error);
          throw new Error('Failed to create story')   
         }
     }
