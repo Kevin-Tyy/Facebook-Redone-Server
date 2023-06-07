@@ -40,9 +40,8 @@ class UserController {
 					});
 				const createdUser = await UserService.createUser(req.body);
 				if (createdUser) {
-					const { userId, email: Email, firstname, lastname } = createdUser;
 					jwt.sign(
-						{ username, Email, firstname, lastname, userId },
+						{ createdUser },
 						jwtsecret,
 						(err, token) => {
 							if (err) throw err;
@@ -77,9 +76,8 @@ class UserController {
 				if (userByUsername) {
 					const loggedInUser = await UserService.loginUser(req.body);
 					if (loggedInUser) {
-						const { userId, email, firstname, lastname } = loggedInUser;
 						jwt.sign(
-							{ username, email, firstname, lastname, userId },
+							{ loggedInUser },
 							jwtsecret,
 							(err, token) => {
 								if (err) throw err;
