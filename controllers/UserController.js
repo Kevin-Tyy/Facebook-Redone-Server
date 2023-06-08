@@ -74,10 +74,10 @@ class UserController {
 				const { username } = req.body;
 				const userByUsername = await UserModel.findOne({ username: username });
 				if (userByUsername) {
-					const loggedInUser = await UserService.loginUser(req.body);
-					if (loggedInUser) {
+					const userInfo = await UserService.loginUser(req.body);
+					if (userInfo) {
 						jwt.sign(
-							{ loggedInUser },
+							{ userInfo },
 							jwtsecret,
 							(err, token) => {
 								if (err) throw err;
@@ -162,8 +162,8 @@ class UserController {
 			const userData = await UserService.getUserById(userId);
 			{
 				userData
-					? res.send({ msg: "User info ", userData: userData })
-					: res.send({ msg: "Cannot view Profile" });
+					? res.send(userData)
+					: res.send({ msg: "Cannot view Profile" , success: false });
 			}
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });

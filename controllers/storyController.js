@@ -9,7 +9,7 @@ class StoryController {
             try{
                 const createdStory = await StoryService.createStory(req.body);
                 {createdStory ? 
-                    res.send({ msg : 'Story added successfully' , post : createdStory , success : true}): 
+                    res.send({ msg : 'Story added successfully' , data : createdStory , success : true}): 
                     res.send({ msg : 'Story not added' , success : false});
                 }
             }catch(error){
@@ -18,7 +18,9 @@ class StoryController {
             }
 
         }
+
     }
+    
     getStories = async (req, res) => {
         try{
             const stories = await StoryService.getStories()

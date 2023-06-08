@@ -38,14 +38,6 @@ const registerValidationSchema = Joi.object({
 			"string.empty": "Please enter a phone number",
 			"string.pattern.base": "Please enter a valid phone number",
 		}),
-	passwordConf: Joi.string()
-		.required()
-		.empty("")
-		.valid(Joi.ref("password"))
-		.messages({
-			"any.required": "Please confirm your password",
-			"any.only": "Passwords do not match",
-		}),
 });
 
 const loginValidationSchema = Joi.object({
