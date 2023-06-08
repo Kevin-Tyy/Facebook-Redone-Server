@@ -38,6 +38,7 @@ const registerValidationSchema = Joi.object({
 			"string.empty": "Please enter a phone number",
 			"string.pattern.base": "Please enter a valid phone number",
 		}),
+		
 });
 
 const loginValidationSchema = Joi.object({
