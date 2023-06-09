@@ -40,18 +40,14 @@ class UserController {
 					});
 				const createdUser = await UserService.createUser(req.body);
 				if (createdUser) {
-					jwt.sign(
-						{ createdUser },
-						jwtsecret,
-						(err, token) => {
-							if (err) throw err;
-							res.send({
-								msg: "User created successfully",
-								token: token,
-								success: true,
-							});
-						}
-					);
+					jwt.sign({ createdUser }, jwtsecret, (err, token) => {
+						if (err) throw err;
+						res.send({
+							msg: "User created successfully",
+							token: token,
+							success: true,
+						});
+					});
 				} else {
 					res.send({
 						msg: "Couldn't create account",
@@ -59,7 +55,10 @@ class UserController {
 					});
 				}
 			} catch (error) {
-				res.send("Couldn't create account");
+				res.send({
+					msg: "Something went wrong, Check your internet connection or try again later",
+					success: false,
+				});
 				console.log(error);
 			}
 		}
@@ -76,18 +75,14 @@ class UserController {
 				if (userByUsername) {
 					const userInfo = await UserService.loginUser(req.body);
 					if (userInfo) {
-						jwt.sign(
-							{ userInfo },
-							jwtsecret,
-							(err, token) => {
-								if (err) throw err;
-								res.send({
-									msg: "user logged in",
-									token: token,
-									success: true,
-								});
-							}
-						);
+						jwt.sign({ userInfo }, jwtsecret, (err, token) => {
+							if (err) throw err;
+							res.send({
+								msg: "user logged in",
+								token: token,
+								success: true,
+							});
+						});
 					} else {
 						res.send({ msg: "Incorrect password" });
 					}
@@ -163,7 +158,7 @@ class UserController {
 			{
 				userData
 					? res.send(userData)
-					: res.send({ msg: "Cannot view Profile" , success: false });
+					: res.send({ msg: "Cannot view Profile", success: false });
 			}
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
