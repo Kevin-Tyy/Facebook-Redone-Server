@@ -1,53 +1,40 @@
+const { string, ref } = require("joi");
 const mongoose = require("mongoose");
-
-const CommentSchema = new mongoose.Schema(
-	{
-		creatorId: {
-			type: String,
-			required : true,	
-			ref: 'users'
-		},
-		content: {
-			type: String,
-			required: true,
-		},
-		commentId : {
-			type: String,
-		}
-	},
-	{ timestamps: true }
-);
 
 const PostSchema = new mongoose.Schema(
 	{
 		creatorId: {
-			type: String,
+			type : mongoose.Schema.Types.ObjectId,
 			required: true,
-			ref : 'users'
+			ref: "users",
 		},
-		postId: {
-			type: String,
-			trim: true,
-			reqruired: true,
-		},
-		postMedia: {
-			type: String,
-			trim: true,
-		},
-		postText: {
-			type: String,
-			required: true,
-			trim: true,
-		},
-        comments : [CommentSchema],
-		
-		taggedpeople: {
-			type: [String],
+		postText: { type: String },
+		postMedia: { type: String },
 
-		},
-		likedPeople: {
-			type: [String],
-		},
+		taggedpeople: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "users",
+			},
+		],
+		likes: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "users",
+			},
+		],
+		comments: [
+			{
+				user: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "comments",
+				},
+				comment: {
+					text: { type: String },
+					createdAt: { type: String },
+				},
+			},
+		],
 	},
 	{ timestamps: true }
 );

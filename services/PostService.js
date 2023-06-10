@@ -5,35 +5,36 @@ const cloudUpload = require("../middleware/cloudUpload");
 class PostService {
 	createPost = async (userId, postData) => {
 		try {
-			const { postMedia, postText } = postData;
+			const { postText , postMedia } = postData;
+			let taggedUsernames;
+			let taggedUsers;
+			let taggedpeople;
+			let imageUploadResponse;
 			let tags = postText.match(/@(\w+)/g);
 			const postId = uuidv4();
-			const imagepUloadResponse = await cloudUpload(postMedia)
-			if (tags) {
-				const taggedUsernames = tags.map((user) => user.slice(1));
-				const taggedUsers = await UserModel.find({
+			if(postMedia){
+				imageUploadResponse = await cloudUpload(postMedia);
+			}
+			if(tags){
+				taggedUsernames = tags.map((user) => user.slice(1));
+				taggedUsers = await UserModel.find({
 					username: { $in: taggedUsernames },
 				});
-				const taggedpeople = taggedUsers.map((user) => user.userId);
-				const createdPost = new PostModel({
-					creatorId: userId,
-					postId: postId,
-					postMedia: imagepUloadResponse?.secureUrl,
-					postText: postText,
-					taggedpeople: taggedpeople,
-				});
-				await createdPost.save();
-				return createdPost;
-			} else {
-				const createdPost = new PostModel({
-					creatorId: userId,
-					postMedia: imagepUloadResponse?.secure_url ,
-					postText: postText,
-					postId: postId,
-				});
-				await createdPost.save();
-				return createdPost;
+				taggedpeople = taggedUsers.map((user) => user._id);
+				console.log(taggedpeople)
 			}
+ 			const { _id } = await UserModel.findOne({ userId : userId })
+			const createdPost = new PostModel({
+				creatorId: _id,
+				postId: postId,
+				postText: postText,
+				postMedia : imageUploadResponse?.secure_url,
+				taggedpeople : taggedpeople
+			});
+
+
+			await createdPost.save();
+			return createdPost;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to create post");
@@ -68,7 +69,7 @@ class PostService {
 	};
 	getAllPosts = async () => {
 		try {
-			const posts = await PostModel.find().sort({ createdAt : -1 });
+			const posts = await PostModel.find().sort({ createdAt: -1 });
 			if (posts) {
 				return posts;
 			}

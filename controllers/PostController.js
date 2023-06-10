@@ -9,7 +9,7 @@ class PostController {
             res.send({ msg : error.details[0].message , success : false});
         }else{
             try{
-                const {userId} = req.body;
+                const { userId } = req.body;
                 const createdPost = await PostService.createPost(userId , req.body);
                 res.send({ msg : 'Post created successfully' , post : createdPost , success : true });
             }catch(error){

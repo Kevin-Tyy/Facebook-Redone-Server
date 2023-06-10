@@ -38,12 +38,12 @@ class UserController {
 						msg: `Phone number ${phoneNumber} is already in use`,
 						success: false,
 					});
-				const createdUser = await UserService.createUser(req.body);
-				if (createdUser) {
-					jwt.sign({ createdUser }, jwtsecret, (err, token) => {
+				const userInfo = await UserService.createUser(req.body);
+				if (userInfo) {
+					jwt.sign({ userInfo }, jwtsecret, (err, token) => {
 						if (err) throw err;
 						res.send({
-							msg: "User created successfully",
+							msg: "Your account has been created successfully",
 							token: token,
 							success: true,
 						});
@@ -78,7 +78,7 @@ class UserController {
 						jwt.sign({ userInfo }, jwtsecret, (err, token) => {
 							if (err) throw err;
 							res.send({
-								msg: "user logged in",
+								msg: "You have logged in successfully",
 								token: token,
 								success: true,
 							});
@@ -124,7 +124,7 @@ class UserController {
 				const updatedProfile = await UserService.updateUser(req.body);
 				{
 					updatedProfile
-						? res.send({ msg: "profile updated successfully", success: true })
+						? res.send({ msg: "Your has been profile updated successfully", success: true })
 						: res.send({ msg: "Couldn't update profile", success: false });
 				}
 			} catch (error) {

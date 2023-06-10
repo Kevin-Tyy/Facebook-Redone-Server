@@ -78,7 +78,6 @@ class UserService {
 	async getUserById(userId) {
 		try {
 			const user = await UserModel.findOne({ userId: userId });
-			console.log(user);
 			return user;
 		} catch (error) {
 			throw new Error("Failed to retrieve User");
