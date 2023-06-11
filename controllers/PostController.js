@@ -29,7 +29,7 @@ class PostController {
                 res.send({ msg : "Couldn't retrieve posts" , success : false })
             }
         } catch (error) {
-            
+            res.send({ msg : "Something went wrong, Refresh the page or try again later" , success : false });
         }
     }
     fetchAllPosts = async (req , res) => {

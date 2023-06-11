@@ -5,33 +5,32 @@ const cloudUpload = require("../middleware/cloudUpload");
 class PostService {
 	createPost = async (userId, postData) => {
 		try {
-			const { postText , postMedia } = postData;
+			const { postText, postMedia } = postData;
 			let taggedUsernames;
 			let taggedUsers;
 			let taggedpeople;
 			let imageUploadResponse;
 			let tags = postText.match(/@(\w+)/g);
 			const postId = uuidv4();
-			if(postMedia){
+			if (postMedia) {
 				imageUploadResponse = await cloudUpload(postMedia);
 			}
-			if(tags){
+			if (tags) {
 				taggedUsernames = tags.map((user) => user.slice(1));
 				taggedUsers = await UserModel.find({
 					username: { $in: taggedUsernames },
 				});
 				taggedpeople = taggedUsers.map((user) => user._id);
-				console.log(taggedpeople)
+				console.log(taggedpeople);
 			}
- 			const { _id } = await UserModel.findOne({ userId : userId })
+			const { _id } = await UserModel.findOne({ userId: userId });
 			const createdPost = new PostModel({
-				creatorId: _id,
+				creator: _id,
 				postId: postId,
 				postText: postText,
-				postMedia : imageUploadResponse?.secure_url,
-				taggedpeople : taggedpeople
+				postMedia: imageUploadResponse?.secure_url,
+				taggedpeople: taggedpeople,
 			});
-
 
 			await createdPost.save();
 			return createdPost;
@@ -59,7 +58,13 @@ class PostService {
 	};
 	getPostsByUserId = async (userId) => {
 		try {
-			const posts = await PostModel.find({ creatorId: userId });
+			const { _id } = await UserModel.findOne({ userId: userId });
+			const posts = await PostModel.find({ creator: _id })
+				.populate("creator")
+				.populate("taggedpeople")
+				.populate("comments")
+				.populate("likes")
+				.sort({ createdAt : -1})
 			if (posts) {
 				return posts;
 			}
@@ -69,43 +74,51 @@ class PostService {
 	};
 	getAllPosts = async () => {
 		try {
-			const posts = await PostModel.find().sort({ createdAt: -1 });
+			const posts = await PostModel.find()
+				.populate("creator")
+				.populate("taggedpeople")
+				.populate("likes")
+				.populate("comments")
+				.sort({ createdAt: -1 });
 			if (posts) {
 				return posts;
 			}
 		} catch (error) {
+			console.log(error);
 			throw new Error("Failed to retrieve posts");
 		}
 	};
 	addLike = async (postId, userId) => {
 		try {
+			const { _id } = await UserModel.findOne({ userId: userId });
 			const likedPost = await PostModel.findOne({ postId: postId });
 			if (likedPost) {
 				const likedPeople = await PostModel.findOneAndUpdate(
 					{ postId: postId },
-					{ $addToSet: { likedPeople: userId } },
+					{ $addToSet: { likes: _id } },
 					{ new: true }
 				);
 				return likedPeople;
 			}
 		} catch (error) {
-			throw new Error("Cannot add like");
+			throw new Error("Error adding like");
 		}
 	};
-	fetchLikes = async () => {};
+
 	removeLike = async (postId, userId) => {
 		try {
+			const { _id } = await UserModel.findOne({ userId: userId });
 			const likedPost = await PostModel.findOne({ postId: postId });
 			if (likedPost) {
 				const likedPeople = await PostModel.findOneAndUpdate(
 					{ postId: postId },
-					{ $pull: { likedPeople: userId } },
+					{ $pull: { likes: _id } },
 					{ new: true }
 				);
 				return likedPeople;
 			}
 		} catch (error) {
-			throw new Error("Re");
+			throw new Error("Error removing like");
 		}
 	};
 	addComment = async (commentData) => {

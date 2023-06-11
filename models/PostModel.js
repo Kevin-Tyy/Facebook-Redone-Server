@@ -3,31 +3,31 @@ const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema(
 	{
-		creatorId: {
+		creator: {
 			type : mongoose.Schema.Types.ObjectId,
 			required: true,
-			ref: "users",
+			ref: "Users",
 		},
 		postText: { type: String },
 		postMedia: { type: String },
-
+		postId : { type: String },
 		taggedpeople: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "users",
+				ref: "Users",
 			},
 		],
 		likes: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "users",
+				ref: "Users",
 			},
 		],
 		comments: [
 			{
 				user: {
 					type: mongoose.Schema.Types.ObjectId,
-					ref: "comments",
+					ref: "Users",
 				},
 				comment: {
 					text: { type: String },
