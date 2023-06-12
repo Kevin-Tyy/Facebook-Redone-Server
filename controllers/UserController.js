@@ -185,5 +185,17 @@ class UserController {
 	acceptRequest = async (req, res) => {};
 	//post
 	logoutUser = async (req, res) => {};
+	fetchUsers = async (req, res) => {
+		try {
+			const users = await UserModel.find().limit(5)
+			if(users.length > 0) {
+				res.send(users)
+			}else{
+				res.send("No users found")
+			}
+		} catch (error) {
+			res.send("Something went wrong, Refresh the page" )
+		}
+	};
 }
 module.exports = new UserController();

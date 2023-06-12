@@ -124,16 +124,18 @@ class PostService {
 	addComment = async (commentData) => {
 		try {
 			const { postId, userId, content } = commentData;
+			const { _id } = await UserModel.findOne({ userId : userId });
 			const post = await PostModel.findOne({ postId: postId });
 			if (post) {
 				const commentId = uuidv4();
 
 				post.comments.push({
-					creatorId: userId,
-					content: content,
+					user : _id,
+					textContent : content,
 					commentId: commentId,
 				});
 				const updatedPost = await post.save();
+				console.log(updatedPost)
 				return updatedPost;
 			}
 		} catch (error) {
@@ -161,15 +163,17 @@ class PostService {
 	};
 	getComments = async (postId) => {
 		try {
-			const post = await PostModel.findOne({ postId: postId });
+			const post = await PostModel.findOne({ postId: postId }).sort({ createdAt: -1}).populate('comments.user');
 			if (post) {
 				if (post.comments) {
-					return comments;
+					return post.comments;
 				}
 			}
 		} catch (error) {
 			throw new Error("Request failed: ");
 		}
+
 	};
+
 }
 module.exports = new PostService();

@@ -2,6 +2,7 @@ const { Router } = require("express");
 const UserController = require("../controllers/UserController");
 const UserRouter = Router();
 
+UserRouter.route('/').get(UserController.fetchUsers)
 UserRouter.post("/register", UserController.registerUser);
 UserRouter.post("/login", UserController.loginUser);
 	

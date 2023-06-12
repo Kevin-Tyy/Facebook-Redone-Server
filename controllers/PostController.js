@@ -86,8 +86,8 @@ class PostController {
         try {
             const createdComment = await PostService.addComment(req.body)
             {createdComment ? 
-                res.send({ msg : 'Post added successfully' , success : true}):
-                res.send({ msg : 'Post not added' , success : false });
+                res.send({ msg : 'Comment added successfully' , success : true}):
+                res.send({ msg : 'Comment not added' , success : false });
             }
         } catch (error) {
             res.send({ msg : 'Something went wrong' , success : false });
@@ -109,9 +109,9 @@ class PostController {
     }   
     getComments = async (req, res) => {
         try {
-            const {id } = req.params
+            const { id } = req.params
             const comments = await PostService.getComments(id);
-            {comments.length>0 ? 
+            {comments.length > 0 ? 
                 res.send({ msg : 'Comments received' , success :true , data : comments}):
                 res.send({ msg : 'No comments' , success :true})
             }

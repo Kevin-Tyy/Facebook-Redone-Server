@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 const PostSchema = new mongoose.Schema(
 	{
 		creator: {
-			type : mongoose.Schema.Types.ObjectId,
+			type: mongoose.Schema.Types.ObjectId,
 			required: true,
 			ref: "Users",
 		},
 		postText: { type: String },
 		postMedia: { type: String },
-		postId : { type: String },
+		postId: { type: String },
 		taggedpeople: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
@@ -29,10 +29,10 @@ const PostSchema = new mongoose.Schema(
 					type: mongoose.Schema.Types.ObjectId,
 					ref: "Users",
 				},
-				comment: {
-					text: { type: String },
-					createdAt: { type: String },
-				},
+
+				textContent: { type: String },
+
+				commentId: { type: String },
 			},
 		],
 	},
