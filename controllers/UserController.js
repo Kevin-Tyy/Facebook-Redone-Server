@@ -190,7 +190,7 @@ class UserController {
 			const users = await UserModel.find().limit(5)
 			if(users.length > 0) {
 				res.send(users)
-			}else{
+			}else{	
 				res.send("No users found")
 			}
 		} catch (error) {
