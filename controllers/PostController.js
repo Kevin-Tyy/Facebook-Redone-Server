@@ -63,7 +63,7 @@ class PostController {
         try {
             const likedPost = await PostService.addLike(postId, userId);
             {likedPost ? 
-                res.send({ msg : 'like added successfully', success : true , data : likedPost}) :
+                res.send({ msg : 'Like added ', success : true , data : likedPost}) :
                 res.send({ msg : 'Like not added successfully', success : false})        
             }
         } catch (error) {
@@ -75,7 +75,7 @@ class PostController {
         try{
             const likedPost = await PostService.removeLike(postId , userId);
             {likedPost ? 
-                res.send({ msg : 'like removed successfully', success : true , data : likedPost}) :
+                res.send({ msg : 'Post unliked', success : true , data : likedPost}) :
                 res.send({ msg : 'Like not removed successfully', success : false})        
             }
         }catch(error){
