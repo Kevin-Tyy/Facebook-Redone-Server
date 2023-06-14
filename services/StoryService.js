@@ -14,9 +14,10 @@ class StoryService {
 				creator: _id,
 				storyMedia: imagepUloadResponse?.secure_url,
 				storyId: storyId,
+				storyCaption : storyCaption,
 			});
-			await createdStory.save();
 			console.log(createdStory);
+			await createdStory.save();
 			return createdStory;
 		} catch (error) {
 			console.log(error);
