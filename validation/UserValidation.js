@@ -62,13 +62,6 @@ const userVerificationSchema = Joi.object({
 });
 const updateProfileSchema = Joi.object({
 	userId: Joi.string().trim(),
-	username: Joi.string().allow(""),
-	email: Joi.string()
-		.email()
-		.allow("")
-		.messages({ "string.email": "Please enter a valid email address" }),
-	firstname: Joi.string().allow(""),
-	lastname: Joi.string().allow(""),
 	bio: Joi.string().allow(""),
 	location: Joi.string().allow(""),
 	education: Joi.string().allow(""),

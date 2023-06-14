@@ -121,10 +121,14 @@ class UserController {
 			res.send({ msg: error.details[0].message, success: false });
 		} else {
 			try {
-				const updatedProfile = await UserService.updateUser(req.body);
+				const userInfo = await UserService.updateUser(req.body);
 				{
-					updatedProfile
-						? res.send({ msg: "Your has been profile updated successfully", success: true })
+					userInfo
+						? res.send({
+								msg: "Your has been profile updated successfully",
+								success: true,
+								userInfo: userInfo,
+						  })
 						: res.send({ msg: "Couldn't update profile", success: false });
 				}
 			} catch (error) {
@@ -187,14 +191,14 @@ class UserController {
 	logoutUser = async (req, res) => {};
 	fetchUsers = async (req, res) => {
 		try {
-			const users = await UserModel.find().limit(5)
-			if(users.length > 0) {
-				res.send(users)
-			}else{	
-				res.send("No users found")
+			const users = await UserModel.find().limit(5);
+			if (users.length > 0) {
+				res.send(users);
+			} else {
+				res.send("No users found");
 			}
 		} catch (error) {
-			res.send("Something went wrong, Refresh the page" )
+			res.send("Something went wrong, Refresh the page");
 		}
 	};
 }

@@ -93,9 +93,8 @@ class UserService {
 			work,
 			profileimage,
 		} = UserData;
-
 		const imagepUloadResponse = await cloudUpload(profileimage);
-		console.log(imagepUloadResponse)
+		
 		try {
 
 			const updatedUser = await UserModel.findOneAndUpdate(
