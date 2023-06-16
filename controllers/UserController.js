@@ -187,6 +187,7 @@ class UserController {
 		try {
 			const { userId } = req.params;
 			const { friendId } = req.body;
+			console.log(userId, friendId);
 			const updatedUser = await UserService.addFriend(userId, friendId)
 			{updatedUser ? 
 				res.send({ msg : "Friend added" , success : true }):

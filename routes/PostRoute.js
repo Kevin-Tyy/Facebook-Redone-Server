@@ -17,7 +17,6 @@ PostRouter.route("/react/like")
 PostRouter.route("/react/comment").post(PostController.addComment);
 
 PostRouter.route("/react/comment/:id")
-	.delete(PostController.deleteComment)
 	.get(PostController.getComments);
 
 module.exports = PostRouter;

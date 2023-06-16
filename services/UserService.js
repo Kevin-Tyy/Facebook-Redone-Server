@@ -27,7 +27,7 @@ class UserService {
 				firstname: firstName,
 				lastname: lastName,
 				phoneNumber: phoneNumber,
-				profileimage: imagepUloadResponse?.secure_url,
+				profileimage: profileimage ? imagepUloadResponse?.secure_url : 'image.png',
 			});
 			await newUser.save();
 			return newUser;
@@ -78,7 +78,7 @@ class UserService {
 	async getUserById(userId) {
 		try {
 			const user = await UserModel.findOne({ userId: userId }).populate(
-				"friendList.userId"
+				"friendList"
 			);
 			return user;
 		} catch (error) {

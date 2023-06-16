@@ -142,25 +142,7 @@ class PostService {
 			throw new Error("Failed to add comment");
 		}
 	};
-	deleteComment = async (postId, commentData) => {
-		try {
-			const { commentId } = commentData;
-			const post = await PostModel.findOne({ postId: postId });
-			if (post) {
-				const commentIndex = post.comments.findIndex(
-					(comment) => comment.commentId === commentId
-				);
 
-				if (commentIndex !== -1) {
-					post.comments.splice(commentIndex, 1);
-					const updatedPost = await post.save();
-					return updatedPost;
-				}
-			}
-		} catch (error) {
-			throw new Error("Request failed");
-		}
-	};
 	getComments = async (postId) => {
 		try {
 			const post = await PostModel.findOne({ postId: postId }).sort({ createdAt: -1}).populate('comments.user');

@@ -94,19 +94,7 @@ class PostController {
                
         }
     }
-    deleteComment = async (req, res) => {
-        try {
-            const {id} = req.params
-            const deletedComment = await PostService.deleteComment(id , req.body)
-            {deletedComment ? 
-            res.send({ msg : 'Comment deleted successfully' , success : true }):
-            res.send({ msg : 'Comment not deleted ' , success : false })
-        }
-        } catch (error) {
-            res.send({ msg : 'Something went wrong' , success : false });
-            
-        }
-    }   
+
     getComments = async (req, res) => {
         try {
             const { id } = req.params
