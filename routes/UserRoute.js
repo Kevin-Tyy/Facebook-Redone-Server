@@ -14,6 +14,10 @@ UserRouter.route("/:userId")
 	.get(UserController.viewProfile)
 	.delete(UserController.deleteUser);
     
-UserRouter.route("/:userId/friends").get(UserController.fetchFriends);
+UserRouter.route("/:userId/friends")
+	.post(UserController.addFriend)
+	.delete(UserController.deleteUser)
+	.get(UserController.fetchFriends);
+
 
 module.exports = UserRouter;

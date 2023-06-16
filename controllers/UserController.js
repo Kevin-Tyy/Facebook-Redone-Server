@@ -183,11 +183,22 @@ class UserController {
 			res.send({ msg: "Something went wrong", success: false });
 		}
 	};
-	//get
-	fetchPendingRequests = async (req, res) => {};
-	//post
-	acceptRequest = async (req, res) => {};
-	//post
+	addFriend = async (req, res) => {
+		try {
+			const { userId } = req.params;
+			const { friendId } = req.body;
+			const updatedUser = await UserService.addFriend(userId, friendId)
+			{updatedUser ? 
+				res.send({ msg : "Friend added" , success : true }):
+				res.send({ msg : "Couldn't add friend" , success : false})
+			}
+		} catch (error) {
+			res.send({ msg : "Something went wrong" , success : false })
+		}
+	};
+	removeFriend = async (req, res) => {
+		res.send({ msg : "Friend removed" , success : true });
+	};
 	logoutUser = async (req, res) => {};
 	fetchUsers = async (req, res) => {
 		try {

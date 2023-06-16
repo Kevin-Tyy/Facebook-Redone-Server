@@ -77,7 +77,9 @@ class UserService {
 
 	async getUserById(userId) {
 		try {
-			const user = await UserModel.findOne({ userId: userId });
+			const user = await UserModel.findOne({ userId: userId }).populate(
+				"friendList.userId"
+			);
 			return user;
 		} catch (error) {
 			throw new Error("Failed to retrieve User");
@@ -117,6 +119,19 @@ class UserService {
 			return User;
 		} catch (error) {
 			throw new Error("Failed to delete User");
+		}
+	}
+	async addFriend(userId, friendId) {
+		try {
+			const user = await UserModel.findOne({ userId: userId });
+			const friend = await UserModel.findOne({ userId: friendId });
+			user.friendList.push(friend._id);
+			friend.friendList.push(user._id);
+			const updatedUser = await user.save();
+			const updatedFriend = await friend.save();
+			return updatedUser;
+		} catch (error) {
+			console.error(error);
 		}
 	}
 }

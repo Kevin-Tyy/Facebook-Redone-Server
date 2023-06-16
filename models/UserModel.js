@@ -56,10 +56,12 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 		},
-		friendList: {
-			type: [String],
-			trim: true,
-		},
+		friendList: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Users",
+			},
+		],
 		phoneNumber: {
 			type: String,
 			trim: true,
