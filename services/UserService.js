@@ -85,26 +85,20 @@ class UserService {
 	}
 
 	async updateUser(UserData) {
-		const {
-			userId,
-			bio,
-			location,
-			education,
-			work,
-			profileimage,
-		} = UserData;
+		const { userId, profileimage, location, work, education, bio } = UserData;
 		const imagepUloadResponse = await cloudUpload(profileimage);
-		
-		try {
 
+		try {
 			const updatedUser = await UserModel.findOneAndUpdate(
 				{ userId: userId },
 				{
-					profileimage: profileimage!=="" ? imagepUloadResponse?.secure_url : null,
-					bio: bio!=="" && bio,
-					location: location!=="" && location,
-					education: education !=="" && education,
-					work: work !=="" && work ,
+					$set: {
+						profileimage: imagepUloadResponse?.secure_url,
+						location: location,
+						education: education,
+						bio: bio,
+						work: work,
+					},
 				},
 				{ new: true }
 			);
