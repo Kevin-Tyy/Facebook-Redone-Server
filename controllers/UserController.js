@@ -197,13 +197,10 @@ class UserController {
 			res.send({ msg : "Something went wrong" , success : false })
 		}
 	};
-	removeFriend = async (req, res) => {
-		res.send({ msg : "Friend removed" , success : true });
-	};
-	logoutUser = async (req, res) => {};
+
 	fetchUsers = async (req, res) => {
 		try {
-			const users = await UserModel.find().limit(5);
+			const users = await UserModel.find().limit(15);
 			if (users.length > 0) {
 				res.send(users);
 			} else {
