@@ -38,7 +38,7 @@ class UserService {
 	async loginUser(userData) {
 		const { username, password } = userData;
 		try {
-			const user = await UserModel.findOne({ username });
+			const user = await UserModel.findOne({ username }).select('-password -phoneNumber -bio -education -location -work');
 			const isVerified = await bcrypt.compare(password, user.password);
 
 			if (isVerified) {
@@ -67,7 +67,7 @@ class UserService {
 	}
 	async getUserFriends(userId) {
 		try {
-			const user = await UserModel.findOne({ userId: userId });
+			const user = await UserModel.findOne({ userId: userId }).populate('friendList');
 			const { friendList } = user;
 			return friendList;
 		} catch (error) {
