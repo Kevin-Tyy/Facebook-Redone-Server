@@ -27,7 +27,9 @@ class UserService {
 				firstname: firstName,
 				lastname: lastName,
 				phoneNumber: phoneNumber,
-				profileimage: profileimage ? imagepUloadResponse?.secure_url : 'image.png',
+				profileimage: profileimage
+					? imagepUloadResponse?.secure_url
+					: "image.png",
 			});
 			await newUser.save();
 			return newUser;
@@ -38,10 +40,12 @@ class UserService {
 	async loginUser(userData) {
 		const { username, password } = userData;
 		try {
-			const user = await UserModel.findOne({ username }).select('-password -phoneNumber -bio -education -location -work');
+			const user = await UserModel.findOne({ username });
 			const isVerified = await bcrypt.compare(password, user.password);
-
 			if (isVerified) {
+				const user = await UserModel.findOne({ username }).select(
+					"-password -phoneNumber -bio -education -location -work"
+				);
 				return user;
 			}
 		} catch (error) {
@@ -67,7 +71,9 @@ class UserService {
 	}
 	async getUserFriends(userId) {
 		try {
-			const user = await UserModel.findOne({ userId: userId }).populate('friendList');
+			const user = await UserModel.findOne({ userId: userId }).populate(
+				"friendList"
+			);
 			const { friendList } = user;
 			return friendList;
 		} catch (error) {
@@ -132,6 +138,20 @@ class UserService {
 			return updatedUser;
 		} catch (error) {
 			console.error(error);
+		}
+	}
+	async removeFriend(userId, friendId) {
+		try {
+			const user = await UserModel.findOne({ userId });
+			const friend = await UserModel.findOne({ userId: friendId });
+			user.friendList.pull(friend._id);
+			friend.friendList.pull(user._id);
+			const updateUser = await user.save();
+			const updateFriend = await friend.save();
+
+			return updateUser;
+		} catch (error) {
+			console.log(error);
 		}
 	}
 }

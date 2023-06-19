@@ -92,7 +92,7 @@ class UserController {
 					});
 				}
 			} catch (error) {
-				res.send(error);
+				res.send({ msg : "Something went wrong, Try again later" , success : false });
 				console.log(error);
 			}
 		}
@@ -183,21 +183,6 @@ class UserController {
 			res.send({ msg: "Something went wrong", success: false });
 		}
 	};
-	addFriend = async (req, res) => {
-		try {
-			const { userId } = req.params;
-			const { friendId } = req.body;
-			console.log(userId, friendId);
-			const updatedUser = await UserService.addFriend(userId, friendId)
-			{updatedUser ? 
-				res.send({ msg : "Friend added" , success : true }):
-				res.send({ msg : "Couldn't add friend" , success : false})
-			}
-		} catch (error) {
-			res.send({ msg : "Something went wrong" , success : false })
-		}
-	};
-
 	fetchUsers = async (req, res) => {
 		try {
 			const users = await UserModel.find().limit(15);
@@ -210,5 +195,32 @@ class UserController {
 			res.send("Something went wrong, Refresh the page");
 		}
 	};
+	addFriend = async (req, res) => {
+		try {
+			const { userId } = req.params;
+			const { friendId } = req.body;
+			const updatedUser = await UserService.addFriend(userId, friendId)
+			{updatedUser ? 
+				res.send({ msg : "Friend added" , success : true }):
+				res.send({ msg : "Couldn't add friend" , success : false})
+			}
+		} catch (error) {
+			res.send({ msg : "Something went wrong" , success : false })
+		}
+	};
+	removeFriend = async (req , res) => {
+		try {
+			const {userId } = req.params;
+			const { friendId } = req.body;
+			const updatedUser = await UserService.removeFriend(userId, friendId)
+			{updatedUser ? 
+				res.send({ msg : "Friend removed" , success : true}) : 
+				res.send({ msg : "Counldn't remove friend" , success : false})
+			}
+		} catch (error) {
+			res.send({ msg : "Something went wrong" , success : false})
+		}
+	}
+	
 }
 module.exports = new UserController();

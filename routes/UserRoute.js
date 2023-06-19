@@ -16,7 +16,7 @@ UserRouter.route("/:userId")
     
 UserRouter.route("/:userId/friends")
 	.post(UserController.addFriend)
-	.delete(UserController.deleteUser)
+	.delete(UserController.removeFriend)
 	.get(UserController.fetchFriends);
 
 
