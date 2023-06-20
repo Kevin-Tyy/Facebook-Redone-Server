@@ -1,4 +1,4 @@
-const app = require('./app');
+const app = require('./app/app');
 const http = require('http');
 const mongodb = require('./db/mongodb');
 const port = 4000;
