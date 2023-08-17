@@ -22,8 +22,7 @@ class UserController {
 				const userByUsername = await UserModel.findOne({ username });
 				const userByEmail = await UserModel.findOne({ email });
 				const userByPhoneNumber = await UserModel.findOne({ phoneNumber });
-
-				if (userByUsername)
+				if (userByUsername)	
 					return res.send({
 						msg: `Username ${username} isn't available`,
 						success: false,

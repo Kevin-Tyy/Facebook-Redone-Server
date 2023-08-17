@@ -64,7 +64,7 @@ class PostService {
 				.populate("taggedpeople")
 				.populate("comments")
 				.populate("likes")
-				.sort({ createdAt : -1})
+				.sort({ createdAt: -1 });
 			if (posts) {
 				return posts;
 			}
@@ -124,18 +124,18 @@ class PostService {
 	addComment = async (commentData) => {
 		try {
 			const { postId, userId, content } = commentData;
-			const { _id } = await UserModel.findOne({ userId : userId });
+			const { _id } = await UserModel.findOne({ userId: userId });
 			const post = await PostModel.findOne({ postId: postId });
 			if (post) {
 				const commentId = uuidv4();
 
 				post.comments.push({
-					user : _id,
-					textContent : content,
+					user: _id,
+					textContent: content,
 					commentId: commentId,
 				});
 				const updatedPost = await post.save();
-				console.log(updatedPost)
+				console.log(updatedPost);
 				return updatedPost;
 			}
 		} catch (error) {
@@ -145,7 +145,9 @@ class PostService {
 
 	getComments = async (postId) => {
 		try {
-			const post = await PostModel.findOne({ postId: postId }).sort({ createdAt: -1}).populate('comments.user');
+			const post = await PostModel.findOne({ postId: postId })
+				.sort({ createdAt: -1 })
+				.populate("comments.user");
 			if (post) {
 				if (post.comments) {
 					return post.comments;
@@ -154,8 +156,6 @@ class PostService {
 		} catch (error) {
 			throw new Error("Request failed: ");
 		}
-
 	};
-
 }
 module.exports = new PostService();
