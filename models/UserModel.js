@@ -38,7 +38,6 @@ const UserSchema = new mongoose.Schema(
 		profileimage: {
 			type: String,
 			trim: true,
-			default: "image.jpg",
 		},
 		education: {
 			type: String,

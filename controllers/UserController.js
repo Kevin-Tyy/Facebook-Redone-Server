@@ -22,7 +22,7 @@ class UserController {
 				const userByUsername = await UserModel.findOne({ username });
 				const userByEmail = await UserModel.findOne({ email });
 				const userByPhoneNumber = await UserModel.findOne({ phoneNumber });
-				if (userByUsername)	
+				if (userByUsername)
 					return res.send({
 						msg: `Username ${username} isn't available`,
 						success: false,
@@ -91,7 +91,10 @@ class UserController {
 					});
 				}
 			} catch (error) {
-				res.send({ msg : "Something went wrong, Try again later" , success : false });
+				res.send({
+					msg: "Something went wrong, Try again later",
+					success: false,
+				});
 				console.log(error);
 			}
 		}
@@ -134,6 +137,26 @@ class UserController {
 				res.send({ msg: "Something went wrong", success: false });
 				console.error(error);
 			}
+		}
+	};
+	updateImage = async (req, res) => {
+		console.log(req);
+		try {
+			if (!req.body.profileimage) {
+				return res.json({ msg: "Provide an image", success: false });
+			}
+			const updatedProfile = await UserService.updateImage(req.body);
+			{
+				updatedProfile
+					? res.send({
+							msg: "Your has been profile updated successfully",
+							success: true,
+					  })
+					: res.send({ msg: "Couldn't update profile", success: false });
+			}
+		} catch (error) {
+			res.send({ msg: "Something went wrong", success: false });
+			console.error(error);
 		}
 	};
 	//delete
@@ -198,28 +221,29 @@ class UserController {
 		try {
 			const { userId } = req.params;
 			const { friendId } = req.body;
-			const updatedUser = await UserService.addFriend(userId, friendId)
-			{updatedUser ? 
-				res.send({ msg : "Friend added" , success : true }):
-				res.send({ msg : "Couldn't add friend" , success : false})
+			const updatedUser = await UserService.addFriend(userId, friendId);
+			{
+				updatedUser
+					? res.send({ msg: "Friend added", success: true })
+					: res.send({ msg: "Couldn't add friend", success: false });
 			}
 		} catch (error) {
-			res.send({ msg : "Something went wrong" , success : false })
+			res.send({ msg: "Something went wrong", success: false });
 		}
 	};
-	removeFriend = async (req , res) => {
+	removeFriend = async (req, res) => {
 		try {
-			const {userId } = req.params;
+			const { userId } = req.params;
 			const { friendId } = req.body;
-			const updatedUser = await UserService.removeFriend(userId, friendId)
-			{updatedUser ? 
-				res.send({ msg : "Friend removed" , success : true}) : 
-				res.send({ msg : "Counldn't remove friend" , success : false})
+			const updatedUser = await UserService.removeFriend(userId, friendId);
+			{
+				updatedUser
+					? res.send({ msg: "Friend removed", success: true })
+					: res.send({ msg: "Counldn't remove friend", success: false });
 			}
 		} catch (error) {
-			res.send({ msg : "Something went wrong" , success : false})
+			res.send({ msg: "Something went wrong", success: false });
 		}
-	}
-	
+	};
 }
 module.exports = new UserController();

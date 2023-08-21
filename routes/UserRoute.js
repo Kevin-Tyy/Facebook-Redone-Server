@@ -8,7 +8,8 @@ UserRouter.post("/login", UserController.loginUser);
 	
 
 UserRouter.route("/accounts/verify").post(UserController.verifyUser);
-UserRouter.route("/accounts/edit").put(UserController.updateUser);
+UserRouter.route("/accounts/edit").patch(UserController.updateUser);
+UserRouter.route("/accounts/edit/profileimage").patch(UserController.updateImage);
 
 UserRouter.route("/:userId")
 	.get(UserController.viewProfile)
@@ -16,7 +17,7 @@ UserRouter.route("/:userId")
     
 UserRouter.route("/:userId/friends")
 	.post(UserController.addFriend)
-	.delete(UserController.removeFriend)
+	.delete(UserController.removeFriend)	
 	.get(UserController.fetchFriends);
 
 

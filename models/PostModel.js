@@ -35,6 +35,14 @@ const PostSchema = new mongoose.Schema(
 				commentId: { type: String },
 			},
 		],
+		views: [
+			{
+				users: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref : 'Users'
+				},
+			},
+		],
 	},
 	{ timestamps: true }
 );

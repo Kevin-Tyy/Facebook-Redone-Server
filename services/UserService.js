@@ -93,19 +93,37 @@ class UserService {
 	}
 
 	async updateUser(UserData) {
-		const { userId, profileimage, location, work, education, bio } = UserData;
-		const imagepUloadResponse = await cloudUpload(profileimage);
+		const { userId, location, work, education, bio } = UserData;
 
 		try {
 			const updatedUser = await UserModel.findOneAndUpdate(
 				{ userId: userId },
 				{
 					$set: {
-						profileimage: imagepUloadResponse?.secure_url,
 						location: location,
 						education: education,
 						bio: bio,
 						work: work,
+					},
+				},
+				{ new: true }
+			);
+			if (updatedUser) {
+				return updatedUser;
+			}
+		} catch (error) {
+			console.log(error.message);
+			throw new Error("Failed to update User", error);
+		}
+	}
+	async updateImage({ userId, profileimage }) {
+		const imagepUloadResponse = await cloudUpload(profileimage);
+		try {
+			const updatedUser = await UserModel.findOneAndUpdate(
+				{ userId: userId },
+				{
+					$set: {
+						profileimage: imagepUloadResponse?.secure_url,
 					},
 				},
 				{ new: true }

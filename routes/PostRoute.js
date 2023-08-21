@@ -19,4 +19,6 @@ PostRouter.route("/react/comment").post(PostController.addComment);
 PostRouter.route("/react/comment/:id")
 	.get(PostController.getComments);
 
+PostRouter.route('/view').post(PostController.viewPost)
+
 module.exports = PostRouter;
