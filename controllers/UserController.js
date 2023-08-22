@@ -8,6 +8,7 @@ const UserService = require("../services/UserService");
 const UserModel = require("../models/UserModel");
 const jwtsecret = process.env.JWTSECRET;
 const jwt = require("jsonwebtoken");
+const createToken = require("../utils/createToken");
 
 class UserController {
 	//post
@@ -21,7 +22,6 @@ class UserController {
 				const { email, username, phoneNumber } = req.body;
 				const userByUsername = await UserModel.findOne({ username });
 				const userByEmail = await UserModel.findOne({ email });
-				const userByPhoneNumber = await UserModel.findOne({ phoneNumber });
 				if (userByUsername)
 					return res.send({
 						msg: `Username ${username} isn't available`,
@@ -32,20 +32,14 @@ class UserController {
 						msg: `Email ${email} already in use`,
 						success: false,
 					});
-				if (userByPhoneNumber)
-					return res.send({
-						msg: `Phone number ${phoneNumber} is already in use`,
-						success: false,
-					});
+
 				const userInfo = await UserService.createUser(req.body);
 				if (userInfo) {
-					jwt.sign({ userInfo }, jwtsecret, (err, token) => {
-						if (err) throw err;
-						res.send({
-							msg: "Your account has been created successfully",
-							token: token,
-							success: true,
-						});
+					const token = await createToken(userInfo)
+					res.send({
+						msg: "Your account has been created successfully",
+						token: token,
+						success: true,
 					});
 				} else {
 					res.send({
@@ -74,20 +68,18 @@ class UserController {
 				if (userByUsername) {
 					const userInfo = await UserService.loginUser(req.body);
 					if (userInfo) {
-						jwt.sign({ userInfo }, jwtsecret, (err, token) => {
-							if (err) throw err;
-							res.send({
-								msg: "You have logged in successfully",
-								token: token,
-								success: true,
-							});
+						const token = await createToken(userInfo)
+						res.send({
+							msg: "You have logged in successfully",
+							token: token,
+							success: true,
 						});
 					} else {
 						res.send({ msg: "Incorrect password" });
 					}
 				} else {
 					return res.send({
-						msg: "User not found \n Please create an account",
+						msg: "User doesn't exist\n Please create an account",
 					});
 				}
 			} catch (error) {

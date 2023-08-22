@@ -17,24 +17,42 @@ class UserService {
 		} = userData;
 		const userId = uuidv4();
 		const passwordhash = await bcrypt.hash(password, 10);
-		const imagepUloadResponse = await cloudUpload(profileimage);
-		try {
-			const newUser = new UserModel({
-				userId: userId,
-				username: username,
-				email: email,
-				password: passwordhash,
-				firstname: firstName,
-				lastname: lastName,
-				phoneNumber: phoneNumber,
-				profileimage: profileimage
-					? imagepUloadResponse?.secure_url
-					: "image.png",
-			});
-			await newUser.save();
-			return newUser;
-		} catch (error) {
-			throw new Error(`Failed to create user ${error.message}`);
+		if (profileimage) {
+			const imagepUloadResponse = await cloudUpload(profileimage);
+			try {
+				const newUser = new UserModel({
+					userId: userId,
+					username: username,
+					email: email,
+					password: passwordhash,
+					firstname: firstName,
+					lastname: lastName,
+					phoneNumber: phoneNumber,
+					profileimage: imagepUloadResponse?.secure_url,
+				});
+				await newUser.save();
+				const user = await UserModel.findOne({ username }).select("-password,");
+				return user;
+			} catch (error) {
+				throw new Error(`Failed to create user ${error.message}`);
+			}
+		} else {
+			try {
+				const newUser = new UserModel({
+					userId: userId,
+					username: username,
+					email: email,
+					password: passwordhash,
+					firstname: firstName,
+					lastname: lastName,
+					phoneNumber: phoneNumber,
+				});
+				await newUser.save();
+				const user = await UserModel.findOne({ username }).select("-password -_id");
+				return user;
+			} catch (error) {
+				throw new Error(`Failed to create user ${error.message}`);
+			}
 		}
 	}
 	async loginUser(userData) {
@@ -43,9 +61,7 @@ class UserService {
 			const user = await UserModel.findOne({ username });
 			const isVerified = await bcrypt.compare(password, user.password);
 			if (isVerified) {
-				const user = await UserModel.findOne({ username }).select(
-					"-password -phoneNumber -bio -education -location -work"
-				);
+				const user = await UserModel.findOne({ username }).select("-password -_id");
 				return user;
 			}
 		} catch (error) {

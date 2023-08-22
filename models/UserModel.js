@@ -60,11 +60,11 @@ const UserSchema = new mongoose.Schema(
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "Users",
 			},
-		],
-		phoneNumber: {
-			type: String,
+		],	
+		coverImage : {
+			type : String,
 			trim: true,
-		},
+		}
 	},
 	{ timestamps: true }
 );
