@@ -199,7 +199,7 @@ class UserController {
 	};
 	fetchUsers = async (req, res) => {
 		try {
-			const users = await UserModel.find().limit(15);
+			const users = await UserModel.find()
 			if (users.length > 0) {
 				res.send(users);
 			} else {

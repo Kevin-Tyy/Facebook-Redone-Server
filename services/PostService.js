@@ -79,6 +79,7 @@ class PostService {
 				.populate("taggedpeople")
 				.populate("likes")
 				.populate("comments")
+				.populate("repostedBy")
 				.sort({ createdAt: -1 });
 			if (posts) {
 				return posts;
@@ -155,6 +156,31 @@ class PostService {
 			}
 		} catch (error) {
 			throw new Error("Request failed: ");
+		}
+	};
+	rePost = async ({
+		postId,
+		repostedBy,
+	}) => {
+		const post = await PostModel.findOne({ postId });
+		const user = await UserModel.findOne({ userId: repostedBy });
+		if (!post || !user) return;
+		try {
+			const createdPost = new PostModel({
+				creator: post.creator,
+				postId: post.postId,
+				postText: post.postText,
+				postMedia: post.postMedia,
+				taggedpeople: post.taggedpeople,
+				isReposted : true,
+				repostedBy : user._id
+			});
+
+			await createdPost.save();
+			return createdPost;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to create post");
 		}
 	};
 }

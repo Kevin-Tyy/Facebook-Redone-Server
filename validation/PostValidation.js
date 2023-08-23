@@ -4,6 +4,8 @@ const createPostValidation = Joi.object({
     postText : Joi.string().required().messages({ 'string.empty': 'Please enter post title'}),
     postMedia : Joi.string().allow(""),
     userId : Joi.string().required(),
+    isReposted : Joi.boolean(),
+    repostedBy : Joi.string()
 })
 const commentValidation = Joi.object({
     postId : Joi.string().required(),

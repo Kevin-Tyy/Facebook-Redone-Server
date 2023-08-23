@@ -120,7 +120,7 @@ class PostController {
 			res.send({
 				msg: "Comments received",
 				success: true,
-				data: comments, 
+				data: comments,
 			});
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
@@ -131,6 +131,14 @@ class PostController {
 			const { postId, userId } = req.params;
 			console.log(postId, userId);
 			res.json("Post viewed");
+		} catch (error) {
+			res.send({ msg: "Something went wrong", success: false });
+		}
+	};
+	repost = async (req, res) => {
+		try {
+			const post = await PostService.rePost(req.body)
+			console.log(post);
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
 		}

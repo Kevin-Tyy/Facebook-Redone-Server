@@ -1,4 +1,4 @@
-const { string, ref } = require("joi");
+const { string, ref, boolean } = require("joi");
 const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema(
@@ -17,6 +17,14 @@ const PostSchema = new mongoose.Schema(
 				ref: "Users",
 			},
 		],
+		isReposted : {
+			type : Boolean,
+			default: false
+		},
+		repostedBy : {
+			type : mongoose.Schema.Types.ObjectId,
+			ref : 'Users'
+		},
 		likes: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
