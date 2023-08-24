@@ -48,20 +48,38 @@ class UserService {
 					phoneNumber: phoneNumber,
 				});
 				await newUser.save();
-				const user = await UserModel.findOne({ username }).select("-password -_id");
+				const user = await UserModel.findOne({ username }).select(
+					"-password -_id"
+				);
 				return user;
 			} catch (error) {
 				throw new Error(`Failed to create user ${error.message}`);
 			}
 		}
 	}
-	async loginUser(userData) {
+	async loginUser(userData, isEmail) {
 		const { username, password } = userData;
 		try {
-			const user = await UserModel.findOne({ username });
-			const isVerified = await bcrypt.compare(password, user.password);
+			if (isEmail) {
+				const emailuser = await UserModel.findOne({ email: username });
+
+				const isVerified = await bcrypt.compare(password, emailuser.password);
+				if (!isVerified) return;
+
+				const user = await UserModel.findOne({
+					username: emailuser.username,
+				}).select("-password -_id");
+				return user;
+			}
+
+			const nameuser = await UserModel.findOne({
+				username,
+			});
+			const isVerified = await bcrypt.compare(password, nameuser.password);
 			if (isVerified) {
-				const user = await UserModel.findOne({ username }).select("-password -_id");
+				const user = await UserModel.findOne({
+					username: nameuser.username,
+				}).select("-password -_id");
 				return user;
 			}
 		} catch (error) {

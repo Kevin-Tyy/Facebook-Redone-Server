@@ -17,13 +17,13 @@ const PostSchema = new mongoose.Schema(
 				ref: "Users",
 			},
 		],
-		isReposted : {
-			type : Boolean,
-			default: false
+		isReposted: {
+			type: Boolean,
+			default: false,
 		},
-		repostedBy : {
-			type : mongoose.Schema.Types.ObjectId,
-			ref : 'Users'
+		repostedBy: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Users",
 		},
 		likes: [
 			{
@@ -39,16 +39,14 @@ const PostSchema = new mongoose.Schema(
 				},
 
 				textContent: { type: String },
-
+				createdAt: { type: Date },
 				commentId: { type: String },
 			},
 		],
 		views: [
 			{
-				users: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref : 'Users'
-				},
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Users",
 			},
 		],
 	},

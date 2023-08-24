@@ -65,11 +65,9 @@ class PostController {
 		const { userId } = req.body;
 		try {
 			const deletedPost = await PostService.deletePost(userId, postId);
-			{
-				deletedPost
-					? res.send({ msg: "post deleted successfully", success: true })
-					: res.send({ msg: "Couldn't delete post ", success: false });
-			}
+			deletedPost
+				? res.send({ msg: "post deleted successfully", success: true })
+				: res.send({ msg: "Couldn't delete post ", success: false });
 		} catch (error) {
 			res.send({ msg: "Somthing went wrong: ", success: false });
 		}
@@ -78,11 +76,10 @@ class PostController {
 		const { postId, userId } = req.body;
 		try {
 			const likedPost = await PostService.addLike(postId, userId);
-			{
-				likedPost
-					? res.send({ msg: "Like added ", success: true, data: likedPost })
-					: res.send({ msg: "Like not added successfully", success: false });
-			}
+
+			likedPost
+				? res.send({ msg: "Like added ", success: true, data: likedPost })
+				: res.send({ msg: "Like not added successfully", success: false });
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
 		}
@@ -91,11 +88,10 @@ class PostController {
 		const { postId, userId } = req.body;
 		try {
 			const likedPost = await PostService.removeLike(postId, userId);
-			{
-				likedPost
-					? res.send({ msg: "Post unliked", success: true, data: likedPost })
-					: res.send({ msg: "Like not removed successfully", success: false });
-			}
+
+			likedPost
+				? res.send({ msg: "Post unliked", success: true, data: likedPost })
+				: res.send({ msg: "Like not removed successfully", success: false });
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
 		}
@@ -103,11 +99,10 @@ class PostController {
 	addComment = async (req, res) => {
 		try {
 			const createdComment = await PostService.addComment(req.body);
-			{
-				createdComment
-					? res.send({ msg: "Comment added successfully", success: true })
-					: res.send({ msg: "Comment not added", success: false });
-			}
+
+			createdComment
+				? res.send({ msg: "Comment added successfully", success: true })
+				: res.send({ msg: "Comment not added", success: false });
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
 		}
@@ -129,16 +124,15 @@ class PostController {
 	viewPost = async (req, res) => {
 		try {
 			const { postId, userId } = req.params;
-			console.log(postId, userId);
-			res.json("Post viewed");
+			const post = await PostService.addView(postId, userId);
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
 		}
 	};
 	repost = async (req, res) => {
 		try {
-			const post = await PostService.rePost(req.body)
-			console.log(post);
+			const post = await PostService.rePost(req.body);
+			post && res.json({ msg : "Post has been shared to your timeline", success: true });
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
 		}

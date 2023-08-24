@@ -65,8 +65,10 @@ class UserController {
 			try {
 				const { username } = req.body;
 				const userByUsername = await UserModel.findOne({ username: username });
-				if (userByUsername) {
-					const userInfo = await UserService.loginUser(req.body);
+				const userByEmail = await UserModel.findOne({ email: username });
+				let isEmail = !!userByEmail
+				if (userByUsername || userByEmail) {
+					const userInfo = await UserService.loginUser(req.body , isEmail);
 					if (userInfo) {
 						const token = await createToken(userInfo)
 						res.send({

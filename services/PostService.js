@@ -134,6 +134,7 @@ class PostService {
 					user: _id,
 					textContent: content,
 					commentId: commentId,
+					createdAt: Date.now(),
 				});
 				const updatedPost = await post.save();
 				console.log(updatedPost);
@@ -158,22 +159,20 @@ class PostService {
 			throw new Error("Request failed: ");
 		}
 	};
-	rePost = async ({
-		postId,
-		repostedBy,
-	}) => {
+	rePost = async ({ postId, repostedBy }) => {
 		const post = await PostModel.findOne({ postId });
 		const user = await UserModel.findOne({ userId: repostedBy });
 		if (!post || !user) return;
+		const newPostId = uuidv4();
 		try {
 			const createdPost = new PostModel({
 				creator: post.creator,
-				postId: post.postId,
+				postId: newPostId,
 				postText: post.postText,
 				postMedia: post.postMedia,
 				taggedpeople: post.taggedpeople,
-				isReposted : true,
-				repostedBy : user._id
+				isReposted: true,
+				repostedBy: user._id,
 			});
 
 			await createdPost.save();
@@ -181,6 +180,22 @@ class PostService {
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to create post");
+		}
+	};
+	addView = async (postId, userId) => {
+		try {
+			const { _id } = await UserModel.findOne({ userId });
+			const post = await PostModel.findOne({ postId });
+			if (post) {
+				const viewers = await PostModel.findOneAndUpdate(
+					{ postId: postId },
+					{ $addToSet: { views: _id } },
+					{ new: true }
+				);
+				return viewers;
+			}
+		} catch (error) {
+			throw new Error("Error adding like");
 		}
 	};
 }

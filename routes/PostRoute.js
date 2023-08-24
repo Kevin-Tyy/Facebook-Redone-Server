@@ -19,6 +19,6 @@ PostRouter.route("/react/comment").post(PostController.addComment);
 PostRouter.route("/react/comment/:id")
 	.get(PostController.getComments);
 
-PostRouter.route('/view').post(PostController.viewPost)
+PostRouter.route('/view/:postId/:userId').post(PostController.viewPost)
 PostRouter.route('/repost').post(PostController.repost)
 module.exports = PostRouter;
