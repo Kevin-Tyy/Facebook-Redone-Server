@@ -172,9 +172,10 @@ class PostService {
 				postText: post.postText,
 				postMedia: post.postMedia,
 				taggedpeople: post.taggedpeople,
-				createdAt : post.createdAt,
+				createdAt : Date.now(),
 				isReposted: true,
 				repostedBy: user._id,
+				repostedDate : post.createdAt
 			});
 			const updateOldPost = await PostModel.findOneAndUpdate(
 				{ postId },
