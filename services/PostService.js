@@ -58,11 +58,14 @@ class PostService {
 	getPostsByUserId = async (userId) => {
 		try {
 			const { _id } = await UserModel.findOne({ userId: userId });
-			const posts = await PostModel.find({ creator: _id })
+			const posts = await PostModel.find({
+				$or: [{ creator: _id }, { repostedBy: _id }],
+			})
 				.populate("creator")
 				.populate("taggedpeople")
 				.populate("comments")
 				.populate("likes")
+				.populate("repostedBy")
 				.sort({ createdAt: -1 });
 			if (posts) {
 				return posts;
@@ -169,6 +172,7 @@ class PostService {
 				postText: post.postText,
 				postMedia: post.postMedia,
 				taggedpeople: post.taggedpeople,
+				createdAt : post.createdAt,
 				isReposted: true,
 				repostedBy: user._id,
 			});
