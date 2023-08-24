@@ -1,4 +1,4 @@
-const { string, ref, boolean } = require("joi");
+const { string, ref, boolean, number } = require("joi");
 const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema(
@@ -31,6 +31,10 @@ const PostSchema = new mongoose.Schema(
 				ref: "Users",
 			},
 		],
+		numberOfReposts : {
+			type : Number,
+			default : 0
+		},
 		comments: [
 			{
 				user: {

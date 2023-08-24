@@ -21,7 +21,6 @@ class PostService {
 					username: { $in: taggedUsernames },
 				});
 				taggedpeople = taggedUsers.map((user) => user._id);
-				console.log(taggedpeople);
 			}
 			const { _id } = await UserModel.findOne({ userId: userId });
 			const createdPost = new PostModel({
@@ -137,7 +136,6 @@ class PostService {
 					createdAt: Date.now(),
 				});
 				const updatedPost = await post.save();
-				console.log(updatedPost);
 				return updatedPost;
 			}
 		} catch (error) {
@@ -174,7 +172,11 @@ class PostService {
 				isReposted: true,
 				repostedBy: user._id,
 			});
-
+			const updateOldPost = await PostModel.findOneAndUpdate(
+				{ postId },
+				{ $set: { numberOfReposts: post.numberOfReposts + 1 } },
+				{ new: true }
+			);
 			await createdPost.save();
 			return createdPost;
 		} catch (error) {
