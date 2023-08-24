@@ -1,7 +1,7 @@
 const PostModel = require("../models/PostModel");
 const UserModel = require("../models/UserModel");
 const PostService = require("../services/PostService");
-const { createPostValidation } = require("../validation/PostValidation");
+const { createPostValidation, commentValidation } = require("../validation/PostValidation");
 class PostController {
 	createPost = async (req, res) => {
 		const { error } = createPostValidation.validate(req.body);
@@ -97,14 +97,19 @@ class PostController {
 		}
 	};
 	addComment = async (req, res) => {
-		try {
-			const createdComment = await PostService.addComment(req.body);
+		const { error } = commentValidation.validate(req.body);
+		if (error) {
+			res.send({ msg: error.details[0].message, success: false });
+		} else {
+			try {
+				const createdComment = await PostService.addComment(req.body);
 
-			createdComment
-				? res.send({ msg: "Comment added successfully", success: true })
-				: res.send({ msg: "Comment not added", success: false });
-		} catch (error) {
-			res.send({ msg: "Something went wrong", success: false });
+				createdComment
+					? res.send({ msg: "Comment added successfully", success: true })
+					: res.send({ msg: "Comment not added", success: false });
+			} catch (error) {
+				res.send({ msg: "Something went wrong", success: false });
+			}
 		}
 	};
 
@@ -132,7 +137,11 @@ class PostController {
 	repost = async (req, res) => {
 		try {
 			const post = await PostService.rePost(req.body);
-			post && res.json({ msg : "Post has been shared to your timeline", success: true });
+			post &&
+				res.json({
+					msg: "Post has been shared to your timeline",
+					success: true,
+				});
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
 		}
