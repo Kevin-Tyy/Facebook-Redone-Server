@@ -1,7 +1,10 @@
 const PostModel = require("../models/PostModel");
 const UserModel = require("../models/UserModel");
 const PostService = require("../services/PostService");
-const { createPostValidation, commentValidation } = require("../validation/PostValidation");
+const {
+	createPostValidation,
+	commentValidation,
+} = require("../validation/PostValidation");
 class PostController {
 	createPost = async (req, res) => {
 		const { error } = createPostValidation.validate(req.body);
@@ -130,6 +133,7 @@ class PostController {
 		try {
 			const { postId, userId } = req.params;
 			const post = await PostService.addView(postId, userId);
+			post && res.json("Post viewed");
 		} catch (error) {
 			res.send({ msg: "Something went wrong", success: false });
 		}

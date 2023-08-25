@@ -52,6 +52,7 @@ class PostService {
 				}
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error("Failed to delete post");
 		}
 	};
@@ -104,6 +105,7 @@ class PostService {
 				return likedPeople;
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error("Error adding like");
 		}
 	};
@@ -121,6 +123,7 @@ class PostService {
 				return likedPeople;
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error("Error removing like");
 		}
 	};
@@ -142,6 +145,7 @@ class PostService {
 				return updatedPost;
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error("Failed to add comment");
 		}
 	};
@@ -157,6 +161,7 @@ class PostService {
 				}
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error("Request failed: ");
 		}
 	};
@@ -202,6 +207,7 @@ class PostService {
 				return viewers;
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error("Error adding like");
 		}
 	};

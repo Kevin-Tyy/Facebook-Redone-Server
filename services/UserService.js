@@ -50,9 +50,10 @@ class UserService {
 				await newUser.save();
 				const user = await UserModel.findOne({ username }).select(
 					"-password -_id"
-				);
-				return user;
-			} catch (error) {
+					);
+					return user;
+				} catch (error) {
+				console.error(error);
 				throw new Error(`Failed to create user ${error.message}`);
 			}
 		}
@@ -83,6 +84,7 @@ class UserService {
 				return user;
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error(`Something went wrong: ${error.message}`);
 		}
 	}
@@ -100,6 +102,7 @@ class UserService {
 				}
 			}
 		} catch (error) {
+			console.error(error);
 			throw new Error(`Something went wrong: ${error.message}`);
 		}
 	}
@@ -111,6 +114,7 @@ class UserService {
 			const { friendList } = user;
 			return friendList;
 		} catch (error) {
+			console.log(error);
 			throw new Error("Failed to retrieve Users");
 		}
 	}
@@ -122,6 +126,7 @@ class UserService {
 			);
 			return user;
 		} catch (error) {
+			console.log(error);
 			throw new Error("Failed to retrieve User");
 		}
 	}
@@ -146,7 +151,7 @@ class UserService {
 				return updatedUser;
 			}
 		} catch (error) {
-			console.log(error.message);
+			console.log(error);
 			throw new Error("Failed to update User", error);
 		}
 	}
@@ -166,7 +171,7 @@ class UserService {
 				return updatedUser;
 			}
 		} catch (error) {
-			console.log(error.message);
+			console.log(error);
 			throw new Error("Failed to update User", error);
 		}
 	}
@@ -176,6 +181,7 @@ class UserService {
 			const User = await UserModel.findOneAndDelete({ userId: userId });
 			return User;
 		} catch (error) {
+			console.log(error);
 			throw new Error("Failed to delete User");
 		}
 	}
