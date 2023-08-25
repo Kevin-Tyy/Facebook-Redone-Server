@@ -35,7 +35,7 @@ class UserController {
 
 				const userInfo = await UserService.createUser(req.body);
 				if (userInfo) {
-					const token = await createToken(userInfo)
+					const token = await createToken(userInfo);
 					res.send({
 						msg: "Your account has been created successfully",
 						token: token,
@@ -66,11 +66,11 @@ class UserController {
 				const { username } = req.body;
 				const userByUsername = await UserModel.findOne({ username: username });
 				const userByEmail = await UserModel.findOne({ email: username });
-				let isEmail = !!userByEmail
+				let isEmail = !!userByEmail;
 				if (userByUsername || userByEmail) {
-					const userInfo = await UserService.loginUser(req.body , isEmail);
+					const userInfo = await UserService.loginUser(req.body, isEmail);
 					if (userInfo) {
-						const token = await createToken(userInfo)
+						const token = await createToken(userInfo);
 						res.send({
 							msg: "You have logged in successfully",
 							token: token,
@@ -201,7 +201,7 @@ class UserController {
 	};
 	fetchUsers = async (req, res) => {
 		try {
-			const users = await UserModel.find()
+			const users = await UserModel.find();
 			if (users.length > 0) {
 				res.send(users);
 			} else {
