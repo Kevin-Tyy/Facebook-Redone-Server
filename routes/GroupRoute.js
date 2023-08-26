@@ -11,4 +11,6 @@ GroupRouter.route("/:groupId")
 GroupRouter.route("/join/:groupId")
 	.post(GroupController.joinGroup)
 	.delete(GroupController.exitGroup);
+
+GroupRouter.get("/:groupId", GroupController.getGroupById);
 module.exports = GroupRouter;

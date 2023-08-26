@@ -11,7 +11,14 @@ class GroupService {
 				groupImage,
 				admin: _id,
 			});
-			return await group.save();
+			await group.save()
+			const admin = await UserModel.findOne({ userId });
+			await GroupModel.findByIdAndUpdate(
+				group._id,
+				{ $addToSet: { groupMembers: admin._id } },
+				{ new: true }
+			);
+			return group;
 		} catch (error) {
 			console.error(error);
 			throw new Error(error);
@@ -36,10 +43,27 @@ class GroupService {
 			{ $addToSet: { groupMembers: _id } },
 			{ new: true }
 		);
-		return group
+		return group;
 	};
-	deleteGroup = async () => {};
+	getGroupById = async ({ groupId }) => {
+		const group = await GroupModel.findById(groupId)
+			.populate("admin")
+			.populate("groupMembers");
+		return group;
+	};
+	deleteGroup = async (groupId) => {
+		const group = await GroupModel.findByIdAndDelete(groupId)
+		return group;
+	};
 	updateGroup = async () => {};
-	exitGroup = async () => {};
+	exitGroup = async (groupId, { userId }) => {
+		const { _id } = await UserModel.findOne({ userId });
+		const group = await GroupModel.findByIdAndUpdate(
+			groupId,
+			{ $pull: { groupMembers: _id } },
+			{ new: true }
+		);
+		return group;
+	};
 }
 module.exports = new GroupService();
