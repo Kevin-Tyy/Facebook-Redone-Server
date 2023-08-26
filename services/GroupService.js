@@ -22,14 +22,22 @@ class GroupService {
 			const groups = await GroupModel.find()
 				.populate("admin")
 				.populate("groupMembers")
-        .sort({ createdAt : -1});
+				.sort({ createdAt: -1 });
 			return groups;
 		} catch (error) {
 			console.error(error);
 			throw new Error(error);
 		}
 	};
-	joinGroup = async () => {};
+	joinGroup = async (groupId, { userId }) => {
+		const { _id } = await UserModel.findOne({ userId });
+		const group = await GroupModel.findByIdAndUpdate(
+			groupId,
+			{ $addToSet: { groupMembers: _id } },
+			{ new: true }
+		);
+		return group
+	};
 	deleteGroup = async () => {};
 	updateGroup = async () => {};
 	exitGroup = async () => {};
