@@ -25,8 +25,8 @@ const PostSchema = new mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Users",
 		},
-		repostedDate : {
-			type : Date,
+		repostedDate: {
+			type: Date,
 			default: Date.now(),
 		},
 		likes: [
@@ -35,10 +35,16 @@ const PostSchema = new mongoose.Schema(
 				ref: "Users",
 			},
 		],
-		numberOfReposts : {
-			type : Number,
-			default : 0
+		numberOfReposts: {
+			type: Number,
+			default: 0,
 		},
+		saves: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Users",
+			},
+		],
 		comments: [
 			{
 				user: {

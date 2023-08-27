@@ -67,6 +67,7 @@ class PostService {
 				.populate("comments")
 				.populate("likes")
 				.populate("repostedBy")
+				.populate("saves")
 				.sort({ createdAt: -1 });
 			if (posts) {
 				return posts;
@@ -82,6 +83,7 @@ class PostService {
 				.populate("taggedpeople")
 				.populate("likes")
 				.populate("comments")
+				.populate("saves")
 				.populate("repostedBy")
 				.sort({ createdAt: -1 });
 			if (posts) {
@@ -177,10 +179,10 @@ class PostService {
 				postText: post.postText,
 				postMedia: post.postMedia,
 				taggedpeople: post.taggedpeople,
-				createdAt : Date.now(),
+				createdAt: Date.now(),
 				isReposted: true,
 				repostedBy: user._id,
-				repostedDate : post.createdAt
+				repostedDate: post.createdAt,
 			});
 			const updateOldPost = await PostModel.findOneAndUpdate(
 				{ postId },
