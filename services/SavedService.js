@@ -26,6 +26,7 @@ class SavedPostService {
 			const posts = await SavedPostModel.find({ creator: _id })
 				.populate("creator")
 				.populate("post")
+				.populate("post.creator")
 				.sort({ createdAt: -1 });
 			return posts;
 		} catch (error) {
@@ -37,7 +38,9 @@ class SavedPostService {
 		try {
 			const { _id } = await UserModel.findOne({ userId: userId });
 			const originalPost = await PostModel.findOne({ postId: postId });
-			const post = await SavedPostModel.findOneAndDelete({ post: originalPost._id });
+			const post = await SavedPostModel.findOneAndDelete({
+				post: originalPost._id,
+			});
 			await PostModel.findByIdAndUpdate(originalPost._id, {
 				$pull: { saves: _id },
 			});
