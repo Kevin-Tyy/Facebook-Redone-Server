@@ -5,19 +5,21 @@ const NotificationSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	isSeen: {
-		type: Boolean,
-		default: false,
-	},
+	Seen: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "Users",
+		},
+	],
 	dateTime: {
 		type: Date,
 	},
 	link: {
 		type: String,
 	},
-	creator : {
-		type : Schema.Types.ObjectId,
-		ref : 'Users'
+	creator: {
+		type: Schema.Types.ObjectId,
+		ref: "Users",
 	},
 	users: [
 		{

@@ -52,5 +52,35 @@ class NotificationManager {
 			console.log(error);
 		}
 	};
+	markAsRead = async (req, res) => {
+		try {
+			const { userId } = req.params;
+			const { _id } = await UserModel.findOne({ userId });
+			const AllNotifications = await NotificationModel.find();
+			const notifications = AllNotifications.filter((notification) =>
+				notification.users.includes(_id)
+			);
+      
+			console.log(notifications);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	removeNotifications = async (req, res) => {
+		try {
+			const { userId } = req.params;
+			const { _id } = await UserModel.findOne({ userId });
+			const allNotifications = await NotificationModel.find();
+			const newNotifications = allNotifications.map((notification) => {
+				if (notification.users.includes(_id)) {
+					return console.log(notification.message);
+				}
+			});
+			// console.log(_id);
+			// console.log(newNotifications);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 }
 module.exports = new NotificationManager();
