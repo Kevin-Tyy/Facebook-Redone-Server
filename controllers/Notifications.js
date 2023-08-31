@@ -55,29 +55,52 @@ class NotificationManager {
 	markAsRead = async (req, res) => {
 		try {
 			const { userId } = req.params;
-			const { _id } = await UserModel.findOne({ userId });
-			const AllNotifications = await NotificationModel.find();
-			const notifications = AllNotifications.filter((notification) =>
-				notification.users.includes(_id)
+			const user = await UserModel.findOne({ userId });
+			const allNotifications = await NotificationModel.find();
+
+			await Promise.all(
+				allNotifications.map(async (notification) => {
+					if (!notification.Seen.includes(user._id.toString())) {
+						notification.Seen.push(user._id);
+						await notification.save();
+					}
+				})
 			);
-      
-			console.log(notifications);
+
+			res.status(200).json({ message: "Notifications marked as read." });
 		} catch (error) {
 			console.log(error);
+			res.status(500).json({ error: "An error occurred." });
 		}
 	};
 	removeNotifications = async (req, res) => {
 		try {
 			const { userId } = req.params;
-			const { _id } = await UserModel.findOne({ userId });
+			const user = await UserModel.findOne({ userId }); // Changed to findOne instead of find
 			const allNotifications = await NotificationModel.find();
-			const newNotifications = allNotifications.map((notification) => {
-				if (notification.users.includes(_id)) {
-					return console.log(notification.message);
-				}
-			});
-			// console.log(_id);
-			// console.log(newNotifications);
+
+			const newNotifications = await Promise.all(
+				allNotifications.map(async (notification) => {
+					if (notification.users.includes(user._id)) {
+						const updatedUsers = notification.users.filter(
+							(id) => id.toString() !== user._id.toString()
+						);
+
+						await NotificationModel.findByIdAndUpdate(
+							notification._id,
+							{ $set: { users: updatedUsers } },
+							{ new: true }
+						);
+
+						return { ...notification._doc, users: updatedUsers };
+					} else {
+						return notification._doc;
+					}
+				})
+			);
+
+			console.log(user._id);
+			console.log(newNotifications);
 		} catch (error) {
 			console.log(error);
 		}

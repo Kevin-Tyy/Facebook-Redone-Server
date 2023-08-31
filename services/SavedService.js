@@ -25,8 +25,18 @@ class SavedPostService {
 			const { _id } = await UserModel.findOne({ userId });
 			const posts = await SavedPostModel.find({ creator: _id })
 				.populate("creator")
-				.populate("post")
 				.populate("post.creator")
+				.populate({
+					path: "post",
+					populate: {
+						path: "creator",
+						model: "Users",
+					},
+					populate : {
+						path : 'repostedBy',
+						model: "Users",
+					}
+				})
 				.sort({ createdAt: -1 });
 			return posts;
 		} catch (error) {
