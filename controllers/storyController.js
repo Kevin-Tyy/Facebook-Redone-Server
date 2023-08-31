@@ -33,7 +33,6 @@ class StoryController {
 			{
 				stories
 					? res.send({
-							msg: "Stories retrieved",
 							success: true,
 							stories: stories,
 					  })

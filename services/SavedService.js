@@ -39,6 +39,20 @@ class SavedPostService {
 						model: "Users",
 					},
 				})
+				.populate({
+					path : 'post',
+					populate: {
+						path : 'saves',
+						model: "Users",
+					}
+				})
+				.populate({	
+					path : 'post',
+					populate: {
+						path : 'likes',
+						model: "Users",
+					}
+				})
 				.sort({ createdAt: -1 });
 			return posts;
 		} catch (error) {
