@@ -76,7 +76,7 @@ class NotificationManager {
 	removeNotifications = async (req, res) => {
 		try {
 			const { userId } = req.params;
-			const user = await UserModel.findOne({ userId }); // Changed to findOne instead of find
+			const user = await UserModel.findOne({ userId });
 			const allNotifications = await NotificationModel.find();
 
 			const newNotifications = await Promise.all(
