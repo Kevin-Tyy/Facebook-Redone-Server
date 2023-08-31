@@ -6,10 +6,12 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 			required: true,
+			lowercase: true,
 		},
 		lastname: {
 			type: String,
 			trim: true,
+			lowercase: true,
 			required: true,
 		},
 		userId: {
@@ -28,11 +30,13 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 			trim: true,
+			lowercase: true,
 			unique: true,
 		},
 		password: {
 			type: String,
 			required: true,
+			lowercase: true,
 			trim: true,
 		},
 		profileimage: {
