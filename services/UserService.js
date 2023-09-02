@@ -50,9 +50,9 @@ class UserService {
 				await newUser.save();
 				const user = await UserModel.findOne({ username }).select(
 					"-password -_id"
-					);
-					return user;
-				} catch (error) {
+				);
+				return user;
+			} catch (error) {
 				console.error(error);
 				throw new Error(`Failed to create user ${error.message}`);
 			}
@@ -108,9 +108,15 @@ class UserService {
 	}
 	async getUserFriends(userId) {
 		try {
-			const user = await UserModel.findOne({ userId: userId }).populate(
-				"friendList"
-			);
+			const user = await UserModel.findOne({ userId: userId })
+				.populate("friendList")
+				.populate({
+					path: "friendList",
+					populate: {
+						path: "friendList",
+						model: "Users",
+					},
+				});
 			const { friendList } = user;
 			return friendList;
 		} catch (error) {
@@ -121,9 +127,15 @@ class UserService {
 
 	async getUserById(userId) {
 		try {
-			const user = await UserModel.findOne({ userId: userId }).populate(
-				"friendList"
-			);
+			const user = await UserModel.findOne({ userId: userId })
+				.populate("friendList")
+				.populate({
+					path: "friendList",
+					populate: {
+						path: "friendList",
+						model: "Users",
+					},
+				});
 			return user;
 		} catch (error) {
 			console.log(error);

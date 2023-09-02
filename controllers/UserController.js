@@ -134,7 +134,6 @@ class UserController {
 		}
 	};
 	updateImage = async (req, res) => {
-		console.log(req);
 		try {
 			if (!req.body.profileimage) {
 				return res.json({ msg: "Provide an image", success: false });
@@ -201,7 +200,7 @@ class UserController {
 	};
 	fetchUsers = async (req, res) => {
 		try {
-			const users = await UserModel.find();
+			const users = await UserModel.find().populate('friendList');
 			if (users.length > 0) {
 				res.send(users);
 			} else {
