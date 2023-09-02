@@ -9,11 +9,9 @@ class NotificationManager {
 				const users = await UserModel.find();
 				const usersToNotify = [];
 				const userArray = users.filter((user) => user.userId !== userId);
-				console.log(userArray);
 				userArray.forEach((user) => {
 					usersToNotify.push(user._id);
 				});
-				console.log(usersToNotify);
 				const notification = new NotificationModel({
 					creator: _id,
 					message,
@@ -42,8 +40,8 @@ class NotificationManager {
 			const { _id } = await UserModel.findOne({ userId });
 			const allNotifications = await NotificationModel.find()
 				.populate("creator")
+				.populate("Seen")
 				.sort({ createdAt: -1 });
-
 			const notifications = allNotifications.filter((notification) =>
 				notification.users.includes(_id)
 			);
@@ -85,7 +83,6 @@ class NotificationManager {
 						const updatedUsers = notification.users.filter(
 							(id) => id.toString() !== user._id.toString()
 						);
-
 						await NotificationModel.findByIdAndUpdate(
 							notification._id,
 							{ $set: { users: updatedUsers } },
@@ -98,9 +95,7 @@ class NotificationManager {
 					}
 				})
 			);
-
-			console.log(user._id);
-			console.log(newNotifications);
+			res.json({msg: 'Notifications removed'})
 		} catch (error) {
 			console.log(error);
 		}
