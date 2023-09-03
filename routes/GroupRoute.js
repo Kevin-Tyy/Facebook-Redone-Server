@@ -13,4 +13,5 @@ GroupRouter.route("/join/:groupId")
 	.delete(GroupController.exitGroup);
 
 GroupRouter.get("/:groupId", GroupController.getGroupById);
+GroupRouter.post("/media", GroupController.createMedia)
 module.exports = GroupRouter;

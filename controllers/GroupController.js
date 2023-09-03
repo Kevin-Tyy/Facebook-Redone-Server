@@ -64,5 +64,27 @@ class GroupController {
 			res.status(500).json({ msg: "Something went wrong" });
 		}
 	};
+	createMedia = async (req, res) => {
+		console.log(req.body)
+		try {
+			const { userId, groupId } = req.body;
+			const createdPost = await GroupService.createMedia(
+				userId,
+				groupId,
+				req.body
+			);
+			res.send({
+				msg: "Post created successfully",
+				post: createdPost,
+				success: true,
+			});
+		} catch (error) {
+			console.log(error);
+			res.send({
+				msg: "Something went wrong, Check your internet connection or try again later",
+				success: false,
+			});
+		}
+	};
 }
 module.exports = new GroupController();
