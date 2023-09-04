@@ -53,6 +53,7 @@ class GroupService {
 			groupId,
 		})
 			.populate("creator")
+			.populate("likes")
 			.sort({ createdAt: -1 });
 		return { group, groupMedia };
 	};

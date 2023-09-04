@@ -63,6 +63,14 @@ const PostSchema = new mongoose.Schema(
 				ref: "Users",
 			},
 		],
+		isGroupShared: {
+			type: Boolean,
+			default: false,
+		},
+		group: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Groups",
+		},
 	},
 	{ timestamps: true }
 );

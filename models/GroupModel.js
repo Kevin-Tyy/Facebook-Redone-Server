@@ -30,5 +30,5 @@ const GroupSchema = new mongoose.Schema(
 
 // GroupSchema.index({ createdAt: 1 }, { expires: '1'  });
 
-const GroupModel = mongoose.model("Group", GroupSchema);
+const GroupModel = mongoose.model("Groups", GroupSchema);
 module.exports = GroupModel;

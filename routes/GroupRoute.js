@@ -13,5 +13,10 @@ GroupRouter.route("/join/:groupId")
 	.delete(GroupController.exitGroup);
 
 GroupRouter.get("/:groupId", GroupController.getGroupById);
-GroupRouter.post("/media", GroupController.createMedia)
+GroupRouter.post("/media", GroupController.createMedia);
+
+GroupRouter.route("/react/like")
+	.post(GroupController.likeMedia)
+	.delete(GroupController.unlikeMedia);
+GroupRouter.route("/share/media").post(GroupController.repost);
 module.exports = GroupRouter;

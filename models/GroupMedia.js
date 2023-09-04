@@ -24,6 +24,10 @@ const GroupMediaSchema = new mongoose.Schema(
 				ref: "Users",
 			},
 		],
+		shares : {
+			type : Number,
+			default: 0,
+		},
 		comments: [
 			{
 				user: {

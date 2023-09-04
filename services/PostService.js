@@ -68,6 +68,7 @@ class PostService {
 				.populate("likes")
 				.populate("repostedBy")
 				.populate("saves")
+				.populate("groups")
 				.sort({ createdAt: -1 });
 			if (posts) {
 				return posts;
@@ -85,6 +86,7 @@ class PostService {
 				.populate("comments")
 				.populate("saves")
 				.populate("repostedBy")
+				.populate("group")
 				.sort({ createdAt: -1 });
 			if (posts) {
 				return posts;
