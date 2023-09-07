@@ -49,7 +49,7 @@ class UserService {
 				});
 				await newUser.save();
 				const user = await UserModel.findOne({ username }).select(
-					"-password -_id"
+					"-password"
 				);
 				return user;
 			} catch (error) {

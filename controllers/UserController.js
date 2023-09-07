@@ -40,6 +40,7 @@ class UserController {
 						msg: "Your account has been created successfully",
 						token: token,
 						success: true,
+						user : userInfo
 					});
 				} else {
 					res.send({
