@@ -4,11 +4,15 @@ const GroupMediaModel = require("../models/GroupMedia");
 class GroupService {
 	createGroup = async ({ groupName, groupDescription, groupImage, userId }) => {
 		try {
+			let imageUploadResponse;
+			if (image) {
+				imageUploadResponse = await cloudUpload(groupImage);
+			}
 			const { _id } = await UserModel.findOne({ userId });
 			const group = new GroupModel({
 				groupName,
 				groupDescription,
-				groupImage,
+				groupImage: imageUploadResponse?.secure_url,
 				admin: _id,
 			});
 			await group.save();
@@ -74,17 +78,16 @@ class GroupService {
 	createMedia = async (userId, groupId, media) => {
 		try {
 			const { image, text } = media;
-			// let imageUploadResponse;
-			// if (image) {
-			// 	imageUploadResponse = await cloudUpload(image);
-			// }
+			let imageUploadResponse;
+			if (image) {
+				imageUploadResponse = await cloudUpload(image);
+			}
 			const { _id } = await UserModel.findOne({ userId: userId });
 			const createdPost = new GroupMediaModel({
 				creator: _id,
 				text: text,
 				groupId: groupId,
-				// image: imageUploadResponse?.secure_url,
-				image: image,
+				image: imageUploadResponse?.secure_url,
 			});
 
 			await createdPost.save();
